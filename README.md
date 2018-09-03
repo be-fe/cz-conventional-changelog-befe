@@ -16,13 +16,18 @@ npm install commitizen \
 ## 使用
 
 在 `package.json` 中书写：
-
+*要把注释删掉哦*
 ```json
 {
-  "config": {
-      "commitizen": {
-        "path": "@baidu/cz-conventional-changelog-befe"
-      }
+  "lang": "en", // prompter language
+  "icafe": "befe-erp", // icafe prefix
+  "config": { 
+    "commitizen": { // git-cz config
+      "path": "@baidu/cz-conventional-changelog-bef"
+    }
+  },
+  "scripts": {
+      "commit": "git-cz"
     }
 }
 ```
