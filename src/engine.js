@@ -91,7 +91,7 @@ module.exports = function (options) {
         breaking = breaking ? 'BREAKING CHANGE: ' + breaking.replace(/^BREAKING CHANGE: /, '') : '';
         breaking = wrap(breaking, wrapOptions);
 
-        var issues = wrap('Cards: ' + utils.issuesFormat(prefix, answers.issues), wrapOptions);
+        var issues = answers.issues ? wrap('Cards: ' + utils.issuesFormat(prefix, answers.issues), wrapOptions) : '\n';
 
         var footer = filter([breaking, issues]).join('\n\n');
 
