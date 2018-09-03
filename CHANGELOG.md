@@ -1,4 +1,7 @@
-## 1.0.1 (2018-09-03)
+## [1.0.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.0.1...v1.0.2) (2018-09-03)
+
+
+## [1.0.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/9242883...v1.0.1) (2018-09-03)
 
 
 ### Bug Fixes
