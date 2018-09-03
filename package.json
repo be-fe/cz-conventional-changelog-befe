@@ -1,0 +1,40 @@
+{
+  "name": "@baidu/cz-conventional-changelog-befe",
+  "version": "1.0.0",
+  "description": "cz-conventional-changelog preset for baidu BEFE.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "commit": "git-cz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://g@gitlab.baidu.com:8022/be-fe/cz-conventional-changelog-befe.git"
+  },
+  "keywords": [
+    "git-cz",
+    "conventional-changelog",
+    "cz-conventional-changelog-befe",
+    "cz-conventional-changelog",
+    "befe"
+  ],
+  "author": "teeeemoji",
+  "license": "MIT",
+  "dependencies": {
+    "@baidu/conventional-commit-types-befe": "^1.0.0",
+    "word-wrap": "^1.2.3"
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lodash": "^4.17.10",
+    "nodemon": "^1.18.4",
+    "tiny-i18n": "^1.1.2"
+  },
+  "lang": "en",
+  "icafe": "befe-erp",
+  "config": {
+    "commitizen": {
+      "path": "./index.js"
+    }
+  }
+}
