@@ -1,6 +1,33 @@
 # @baidu/conventional-changelog-befe
 
 cz-conventional-changelog preset for baidu BEFE.
+通过友好交互生成符合 git hub 社区主流规范的 commit message.
+是一个基于 commitizen 的 prompter.
+
+## 主流规范说明
+```bash
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+## 问题顺序
+- **type** (*required*)
+  Select the type of change that you're committing
+- **scope** (**not required**)
+  Denote the scope of this change ($location, $browser, $compile, etc.)
+- **subject** (*required*)
+  Write a short, imperative tense description of the change
+- **body** (*not required*)
+  Provide a longer description of the change
+- **footer** (*not required*)
+  - **breaking changes** (*not required*)
+    List any breaking changes
+  - **issues** (*not required*)
+    List any issues closed by this change
+
 
 ## 安装
 
@@ -23,7 +50,7 @@ npm install commitizen \
   "icafe": "befe-erp", // icafe prefix
   "config": { 
     "commitizen": { // git-cz config
-      "path": "@baidu/cz-conventional-changelog-bef"
+      "path": "@baidu/cz-conventional-changelog-befe"
     }
   },
   "scripts": {
@@ -31,6 +58,13 @@ npm install commitizen \
     }
 }
 ```
+
+## 测试
+```bash
+npm run commit
+```
+
+
 
 ## 样例项目
 [icode commit-demo](http://icode.baidu.com/repos/baidu/personal-code/commit-demo)
