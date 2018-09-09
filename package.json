@@ -1,6 +1,6 @@
 {
   "name": "@baidu/cz-conventional-changelog-befe",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "cz-conventional-changelog preset for baidu BEFE.",
   "main": "index.js",
   "scripts": {
