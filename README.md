@@ -13,6 +13,15 @@ cz-conventional-changelog preset for baidu BEFE.
 <footer>
 ```
 
+生成的 commit message 示例
+```bash
+feat(邮件模块): 富文本输入框添加变量的 mention 功能
+
+mention 功能并未使用第三方库
+
+Cards: hcm-123,hcm-234,hcm-345
+```
+
 ## 问题顺序
 - **type** (*required*)
   Select the type of change that you're committing
