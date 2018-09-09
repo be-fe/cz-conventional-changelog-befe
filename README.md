@@ -1,19 +1,32 @@
 # @baidu/conventional-changelog-befe
 
-cz-conventional-changelog preset for baidu BEFE.
-通过友好交互生成符合 git hub 社区主流规范的 commit message.
-是一个基于 commitizen 的 prompter.
+## Spec
+cz-conventional-changelog-befe 是为 BEFE 团队定制的 cz-conventional-changelog.
+可以通过友好交互(问答式)生成符合 git hub 社区主流规范的 commit message.
 
-## 主流规范说明
+主要特性:
+- 关联多张 icafe 卡片, 自动补全 icafe card 前缀
+- 生成 BEFE 团队风格的 commit message
+- 友好问答有国际化
+
+## 主流规范 vs BEFE 规范
 ```bash
+# types is BEFE's standard
 <type>(<scope>): <subject>
 
 <body>
 
 <footer>
+  <breaking changes>
+  # issues will be icafe card ID
+  <issues>
 ```
 
-生成的 commit message 示例
+**主要区别两个**
+- types: 是 BEFE 团队定制的 types from [@baidu/conventional-commit-types-befe](http://gitlab.baidu.com/be-fe/conventional-commit-types-befe)
+- issues: 提示输入 icafe card ID, 会自动补全前缀
+
+**生成的 commit message 示例**
 ```bash
 feat(邮件模块): 富文本输入框添加变量的 mention 功能
 
