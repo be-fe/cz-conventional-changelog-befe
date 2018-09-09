@@ -1,3 +1,6 @@
+## [1.0.5](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.0.4...v1.0.5) (2018-09-09)
+
+
 ## [1.0.4](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.0.1...v1.0.4) (2018-09-03)
 
 
