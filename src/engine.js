@@ -102,10 +102,18 @@ module.exports = function(options) {
             suggestOnly: true,
             name: 'subject',
             source: makeSuggest(),
+            validate: input => {
+              if (!input) {
+                return 'Required'
+              }
+              return true
+            },
             message: i18n('subject.hint')
           },
           {
+            // TODO: bug  重复行在 cli
             type: 'auto-complete',
+            // type: 'input',
             noResultText: null,
             suggestOnly: true,
             name: 'body',

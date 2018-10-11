@@ -60,7 +60,7 @@
     "prettier": "^1.14.3",
     "pretty-quick": "^1.7.0"
   },
-  "lang": "zh",
+  "lang": "en",
   "icafe": "befe-erp",
   "config": {
     "commitizen": {

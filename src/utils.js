@@ -161,6 +161,7 @@ function suggestIcafeIssues(
   })
 
   let isStartIssue = matching.startsWith('#')
+
   if (/^([a-zA-Z][\w-]+)-(.*)$/.test(matching)) {
     isStartIssue = true
     spaceId = RegExp.$1
