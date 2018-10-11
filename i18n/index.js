@@ -1,4 +1,4 @@
-const {createIsolateI18n} = require('tiny-i18n')
+const { createIsolateI18n } = require('tiny-i18n')
 const langZhCN = require('./zh-CN')
 const langEnUS = require('./en-US')
 

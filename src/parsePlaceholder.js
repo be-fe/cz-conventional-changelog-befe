@@ -1,18 +1,31 @@
-'use strict';
+const loaderUtils = require('loader-utils')
 
-module.exports = function (template, args) {
-  if (!args) {
-    return interpolate.bind(null, template);
-  }
+module.exports = function(template) {
+  return interpolate(template)
+}
 
-  return interpolate(template, args);
-};
+function interpolate(template) {
+  const keys = []
+  template.replace(/({([^}]+)}|(.+?))/g, function(match, m, key, chars) {
+    let data = {}
+    if (key) {
+      let i = key.lastIndexOf(':')
+      if (i >= 0 && i < key.length - 1) {
+        data = loaderUtils.parseQuery('?' + key.slice(i + 1))
+        key = key.slice(0, i)
+      }
+    }
 
-function interpolate(template, args) {
-  if (typeof args === 'undefined') {
-    args = {};
-  }
-  return template.replace(/{([^}]*)}/g, function (match, key) {
-    return key in args ? args[key] : match;
-  });
+    const d = key
+      ? { type: 'data', value: key, data }
+      : { type: 'plain', value: chars }
+    const last = keys[keys.length - 1]
+    if (last && last.type === 'plain' && d.type === 'plain') {
+      last.value += d.value
+    } else {
+      keys.push(d)
+    }
+    return match
+  })
+  return keys
 }
