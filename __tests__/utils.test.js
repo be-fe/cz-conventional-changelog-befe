@@ -277,7 +277,7 @@ Object {
 
   it('should utils.parsePlaceholder.js', () => {
     expect(
-      util.parsePlaceholder('#{type} {noop} {title:flag} {所属计划:}{}', data)
+      util.parsePlaceholder('#{type} {noop} {title?flag} {所属计划?}{}', data)
     ).toMatchInlineSnapshot(`
 Array [
   Object {
@@ -316,7 +316,7 @@ Array [
   Object {
     "data": Object {},
     "type": "data",
-    "value": "所属计划:",
+    "value": "所属计划?",
   },
   Object {
     "type": "plain",

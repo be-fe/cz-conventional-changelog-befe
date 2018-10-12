@@ -149,7 +149,7 @@ function suggestIcafeIssues(
     username = Card.constructor.defaultData.username,
     password = Card.constructor.defaultData.password,
     iql = '负责人 in (currentUser)',
-    suggestPlaceholder = '#{sequence} [{type}] ({status}) {title:link}  {responsiblePeople:w=20}',
+    suggestPlaceholder = '#{sequence} [{type}] ({status}) {title?link}  {responsiblePeople?w=20}',
 
     always
   } = {}

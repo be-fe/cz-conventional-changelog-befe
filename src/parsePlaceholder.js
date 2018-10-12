@@ -9,7 +9,7 @@ function interpolate(template) {
   template.replace(/({([^}]+)}|(.+?))/g, function(match, m, key, chars) {
     let data = {}
     if (key) {
-      let i = key.lastIndexOf(':')
+      let i = key.lastIndexOf('?')
       if (i >= 0 && i < key.length - 1) {
         data = loaderUtils.parseQuery('?' + key.slice(i + 1))
         key = key.slice(0, i)

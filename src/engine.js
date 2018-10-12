@@ -16,6 +16,26 @@ const filter = function(array) {
   })
 }
 
+const args = minimist(process.argv.slice(2), {
+  boolean: ['read']
+})
+
+function removeArgv(flags = []) {
+  flags.forEach(flag => {
+    while (true) {
+      let readIndex = process.argv.findIndex(
+        x => x === flag || x.startsWith(flag + '=')
+      )
+      if (readIndex >= 0) {
+        process.argv.splice(readIndex, 1)
+      } else {
+        break
+      }
+    }
+  })
+}
+removeArgv(['--read'])
+
 // This can be any kind of SystemJS compatible module.
 // We use Commonjs here, but ES6 or AMD would do just
 // fine.
@@ -38,11 +58,6 @@ module.exports = function(options) {
       )
     }
   }
-
-  const args = minimist(process.argv.slice(2), {
-    boolean: ['read-store']
-  })
-  // console.error(args)
 
   return {
     // When a user runs `git cz`, prompter will
@@ -68,95 +83,100 @@ module.exports = function(options) {
       // collection library if you prefer.
 
       cz.registerPrompt('auto-complete', autoComplete)
+      const store = new FileStore({
+        storePath: nps.join(__dirname, '../inquirer-cache.json'),
+        key: gitRootPath
+      })
 
-      inquirerStore(
-        cz.prompt,
-        [
-          {
-            type: 'auto-complete',
-            // searchText: null,
-            // noResultText: null,
-            name: 'type',
-            message: i18n('feat.hint'),
-            source: (answers, input) => {
-              return fuzzy
-                .filter(input || '', typeChoices, {
-                  extract: function(el) {
-                    return (el.value || '') + ' ' + el.name
-                  }
-                })
-                .map(x => {
-                  return x.original
-                })
-            }
-          },
-          {
-            type: 'input',
-            name: 'scope',
-            message: i18n('scope.hint')
-          },
-          {
-            type: 'auto-complete',
-            // searchText: null,
-            noResultText: null,
-            suggestOnly: true,
-            name: 'subject',
-            source: makeSuggest(),
-            validate: input => {
-              if (!input) {
-                return 'Required'
+      function prompt() {
+        return inquirerStore(
+          cz.prompt,
+          [
+            {
+              type: 'auto-complete',
+              // searchText: null,
+              // noResultText: null,
+              name: 'type',
+              message: i18n('feat.hint'),
+              source: (answers, input) => {
+                return fuzzy
+                  .filter(input || '', typeChoices, {
+                    extract: function(el) {
+                      return (el.value || '') + ' ' + el.name
+                    }
+                  })
+                  .map(x => {
+                    return x.original
+                  })
               }
-              return true
             },
-            message: i18n('subject.hint')
-          },
+            {
+              type: 'input',
+              name: 'scope',
+              message: i18n('scope.hint')
+            },
+            {
+              type: 'auto-complete',
+              // searchText: null,
+              noResultText: null,
+              suggestOnly: true,
+              name: 'subject',
+              source: makeSuggest(),
+              validate: input => {
+                if (!input) {
+                  return 'Required'
+                }
+                return true
+              },
+              message: i18n('subject.hint')
+            },
+            {
+              // TODO: bug  重复行在 cli
+              type: 'auto-complete',
+              // type: 'input',
+              noResultText: null,
+              suggestOnly: true,
+              name: 'body',
+              message: i18n('body.hint'),
+              source: makeSuggest()
+            },
+            {
+              type: 'confirm',
+              default: false,
+              name: 'hasBreaking',
+              message: i18n('has-breaking.hint')
+            },
+            {
+              type: 'input',
+              when: ans => ans.hasBreaking,
+              name: 'breaking',
+              message: i18n('breaking.change.hint')
+            },
+            {
+              type: 'confirm',
+              default: false,
+              name: 'hasIssues',
+              message: i18n('has-issues.hint')
+            },
+            {
+              when: ans => ans.hasIssues,
+              type: 'auto-complete',
+              suggestOnly: true,
+              searchText: null,
+              noResultText: null,
+              name: 'issues',
+              source: makeSuggest({ always: true }),
+              message: i18n('issues.hint')
+            }
+          ],
           {
-            // TODO: bug  重复行在 cli
-            type: 'auto-complete',
-            // type: 'input',
-            noResultText: null,
-            suggestOnly: true,
-            name: 'body',
-            message: i18n('body.hint'),
-            source: makeSuggest()
-          },
-          {
-            type: 'confirm',
-            default: false,
-            name: 'hasBreaking',
-            message: i18n('has-breaking.hint')
-          },
-          {
-            type: 'input',
-            when: ans => ans.hasBreaking,
-            name: 'breaking',
-            message: i18n('breaking.change.hint')
-          },
-          {
-            type: 'confirm',
-            default: false,
-            name: 'hasIssues',
-            message: i18n('has-issues.hint')
-          },
-          {
-            when: ans => ans.hasIssues,
-            type: 'auto-complete',
-            suggestOnly: true,
-            searchText: null,
-            noResultText: null,
-            name: 'issues',
-            source: makeSuggest({ always: true }),
-            message: i18n('issues.hint')
+            mode: args['read'] ? 'duplex' : 'write',
+            store
           }
-        ],
-        {
-          mode: args['read-store'] ? 'duplex' : 'write',
-          store: new FileStore({
-            storePath: nps.join(__dirname, '../inquirer-cache.json'),
-            key: gitRootPath
-          })
-        }
-      )
+        )
+      }
+
+      prompt()
         .then(function(answers) {
           const maxLineWidth = 100
 
@@ -202,13 +222,12 @@ module.exports = function(options) {
               if (footer) {
                 message += '\n\n' + footer
               }
-              commit(message)
+              commit(message, {
+                args: process.argv.slice(2)
+              })
             })
         })
-        .catch(err => {
-          console.error(err)
-          throw err
-        })
+        .catch(commit)
     }
   }
 }
