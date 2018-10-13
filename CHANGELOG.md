@@ -1,4 +1,10 @@
-# 1.2.0 (2018-10-13)
+## [1.2.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.0...v1.2.1) (2018-10-13)
+
+### 新特性
+
+- add check-node-version ([db0668b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/db0668b))
+
+# [1.2.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/9242883...v1.2.0) (2018-10-13)
 
 ### 修复
 
