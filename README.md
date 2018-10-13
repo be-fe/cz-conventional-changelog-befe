@@ -62,7 +62,7 @@ fix hcm-123,hcm-234,hcm-345
 
 ```bash
 npm install commitizen \
-  @baidu/cz-conventional-changelog-befe husky \
+  @baidu/cz-conventional-changelog-befe \
   -D --registry=http://registry.npm.baidu-int.com
 ```
 
