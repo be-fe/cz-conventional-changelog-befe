@@ -9,6 +9,8 @@ cz-conventional-changelog-befe 是为 BEFE 团队定制的 [commitizen 适配器
 - 关联多张 icafe 卡片, 自动补全 icafe card 前缀
 - 生成 BEFE 团队风格的 commit message
 - 友好问答
+- icafe suggest
+- 记录上次的交互输入值
 
 ## 主流规范 vs BEFE 规范
 
