@@ -1,3 +1,9 @@
+## [1.2.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.1...v1.2.2) (2018-10-13)
+
+### 修复
+
+- --retry ([cc4000b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/cc4000b))
+
 ## [1.2.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.0...v1.2.1) (2018-10-13)
 
 ### 新特性
