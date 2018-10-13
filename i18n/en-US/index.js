@@ -15,5 +15,6 @@ module.exports = {
     'List any issues closed by this change\n' +
     "1. use icafe prefix config, you can start with '#' (e.g. close #123)\n" +
     "2. without icafe prefix config, just don't start with '#' (e.g. fix asset-123 123 12312)\n" +
-    "3. multiple issues seperate by space or ',' (e.g. re asset-123,#2345,#123123,hard-3)\n"
+    "3. multiple issues seperate by space or ',' (e.g. re asset-123,#2345,#123123,hard-3)\n",
+  'subject.error': "Please write some short description here, it's required"
 }

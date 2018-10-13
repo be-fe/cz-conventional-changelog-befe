@@ -230,13 +230,12 @@ function suggestIcafeIssues(
           }
         })
         table.push(row)
+
+        const leftStr =
+          input.slice(0, leftIndex) + spaceId + '-' + simplifiedData.sequence
         return {
-          value:
-            input.slice(0, leftIndex) +
-            spaceId +
-            '-' +
-            simplifiedData.sequence +
-            input.slice(rightIndex)
+          value: leftStr + input.slice(rightIndex),
+          cursor: leftStr.length
         }
       })
 
@@ -248,7 +247,8 @@ function suggestIcafeIssues(
         )
         return {
           name: sliceString(tableLines[index], len),
-          value: data.value
+          value: data.value,
+          cursor: data.cursor
         }
       })
 

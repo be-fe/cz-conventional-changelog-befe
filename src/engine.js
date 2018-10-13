@@ -117,28 +117,27 @@ module.exports = function(options) {
             },
             {
               type: 'auto-complete',
-              // searchText: null,
               noResultText: null,
               suggestOnly: true,
               name: 'subject',
               source: makeSuggest(),
               validate: input => {
                 if (!input) {
-                  return 'Required'
+                  return i18n('subject.error')
                 }
                 return true
               },
               message: i18n('subject.hint')
             },
             {
-              // TODO: bug  重复行在 cli
-              type: 'auto-complete',
-              // type: 'input',
-              noResultText: null,
-              suggestOnly: true,
+              // bug: 在 cli 包含重复行，如果 type 为 auto-complete
+              // type: 'auto-complete',
+              // noResultText: null,
+              // suggestOnly: true,
+              // source: makeSuggest(),
+              type: 'input',
               name: 'body',
-              message: i18n('body.hint'),
-              source: makeSuggest()
+              message: i18n('body.hint')
             },
             {
               type: 'confirm',
@@ -151,6 +150,9 @@ module.exports = function(options) {
               when: ans => ans.hasBreaking,
               name: 'breaking',
               message: i18n('breaking.change.hint')
+              // noResultText: null,
+              // suggestOnly: true,
+              // source: makeSuggest()
             },
             {
               type: 'confirm',
@@ -162,7 +164,6 @@ module.exports = function(options) {
               when: ans => ans.hasIssues,
               type: 'auto-complete',
               suggestOnly: true,
-              searchText: null,
               noResultText: null,
               name: 'issues',
               source: makeSuggest({ always: true }),

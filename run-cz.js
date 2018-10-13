@@ -5,13 +5,11 @@
  *
  */
 
-const path = require('path')
-const bootstrap = require('commitizen/dist/cli/git-cz').bootstrap
+const inquirer = require('inquirer')
+const prompter = require('.').prompter
 
-return bootstrap({
-  cliPath: path.join(__dirname, 'node_modules/commitizen'),
-  // this is new
-  config: {
-    path: require.resolve('.')
-  }
+return prompter(inquirer, function(msg, options) {
+  console.log(msg)
+  console.log('----------------------------------')
+  console.log(options)
 })
