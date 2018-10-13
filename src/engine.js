@@ -82,6 +82,7 @@ module.exports = function(options) {
       // You can also opt to use another input
       // collection library if you prefer.
 
+      const type = prefix ? 'auto-complete' : 'input'
       cz.registerPrompt('auto-complete', autoComplete)
       const store = new FileStore({
         storePath: nps.join(__dirname, '../inquirer-cache.json'),
@@ -116,7 +117,7 @@ module.exports = function(options) {
               message: i18n('scope.hint')
             },
             {
-              type: 'auto-complete',
+              type: type,
               noResultText: null,
               suggestOnly: true,
               name: 'subject',
@@ -162,7 +163,7 @@ module.exports = function(options) {
             },
             {
               when: ans => ans.hasIssues,
-              type: 'auto-complete',
+              type: type,
               suggestOnly: true,
               noResultText: null,
               name: 'issues',
