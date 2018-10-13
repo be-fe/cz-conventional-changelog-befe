@@ -35,7 +35,7 @@ function removeArgv(flags = []) {
     }
   })
 }
-removeArgv(['--read'])
+removeArgv(['--read', '--retry'])
 
 // This can be any kind of SystemJS compatible module.
 // We use Commonjs here, but ES6 or AMD would do just
