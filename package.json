@@ -9,6 +9,7 @@
     "version": "npm run changelog",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "precommit": "pretty-quick --staged",
+    "prepublishOnly": "npm test",
     "changelog": "conventional-changelog -p @baidu/befe -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
   },
   "repository": {
