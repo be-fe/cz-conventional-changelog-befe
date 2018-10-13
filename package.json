@@ -62,9 +62,7 @@
   },
   "lang": "zh",
   "icafe": {
-    "spaceId": "befe-erp",
-    "suggestPlaceholder": "#{sequence?link} [{type}] ({status}) {title?link&width=30}  {responsiblePeople?w=20}",
-    "iql": "负责人 in (currentUser,yucong02)"
+    "spaceId": "befe-erp"
   },
   "config": {
     "commitizen": {
