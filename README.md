@@ -83,7 +83,7 @@ npm install commitizen \
 {
   "lang": "en", // 默认为 `zh`
   "icafe": {
-    "spaceId": 非必填，icafe 的空间标识。如 "befe-erp"
+    "spaceId": "" // 非必填，icafe 的空间标识，不填则关闭 icafe suggest 和补全功能。如 "befe-erp"
   },
   "config": {
     "commitizen": {
@@ -100,11 +100,11 @@ npm install commitizen \
 }
 ```
 
-### `icafe` 字段配置说明
+### 配置说明
 
 其中的 `icafe` 字段用来设置 icafe-suggest 功能的参数值
 
-参数值的接受规则请看[icafe-api](http://gitlab.baidu.com/be-fe/icafe-api#%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81%E7%AD%89%E9%BB%98%E8%AE%A4%E5%8F%82%E6%95%B0)
+参数值的接受规则请看 [icafe-api](http://gitlab.baidu.com/be-fe/icafe-api#%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81%E7%AD%89%E9%BB%98%E8%AE%A4%E5%8F%82%E6%95%B0)
 
 #### `iql`
 
@@ -137,7 +137,7 @@ npm install commitizen \
 | link | 是否在该字段上显示使用超链接（ Cmd + 左键 跳转至 icafe ） | boolean |
 | w    | 该字段的最大宽度大小，超出用 '...' 结尾                   | number  |
 
-#### 其他参数
+### `icafe-api` 参数配置
 
 根据 [icafe-api](http://gitlab.baidu.com/be-fe/icafe-api#%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81%E7%AD%89%E9%BB%98%E8%AE%A4%E5%8F%82%E6%95%B0) 的参数获取规则，
 
