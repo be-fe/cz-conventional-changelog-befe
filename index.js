@@ -1,3 +1,5 @@
+require('./check-node-version')
+
 const i18n = require('./i18n')
 const utils = require('./src/utils')
 const getCommitlintTypes = require('@baidu/conventional-commit-types-befe')
@@ -10,6 +12,7 @@ let types = getCommitlintTypes(packageJson.lang)
 const icafe = normalizeIcafeByPkg(packageJson)
 
 module.exports = engine({
+  pkg: packageJson,
   icafe: icafe,
   language: packageJson.lang,
   typeObjects: types.typeObjects,

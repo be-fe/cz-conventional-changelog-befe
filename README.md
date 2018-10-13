@@ -53,7 +53,7 @@ fix hcm-123,hcm-234,hcm-345
 - **body** (_optional_)
   Provide a longer description of the change
 - **footer** (_optional_)
-  - **breaking changes** (_not required_)
+  - **breaking changes** (_optional_)
     List any breaking changes
   - **issues** (_optional_)
     List any issues closed by this change
@@ -81,14 +81,15 @@ npm install commitizen \
 {
   "lang": "en", // 默认为 `zh`
   "icafe": {
-    "spaceId": 非必填，icafe 的空间标识。如 "befe-erp",
-    "iql": "",  // 非必填，高级搜索的字段，默认值为 "负责人 in (currentUser)"
-    "suggestPlaceholder": "" // 非必填，命令行中的 suggest 展示规则，默认值 "#{sequence} [{type}] ({status}) {title?link}  {responsiblePeople?w=20}"
+    "spaceId": 非必填，icafe 的空间标识。如 "befe-erp"
   },
   "config": {
     "commitizen": {
-      // git-cz config
       "path": "@baidu/cz-conventional-changelog-befe"
+    },
+    "@baidu/cz-conventional-changelog-befe": {
+      "iql": "",  // 非必填，高级搜索的字段，默认值为 "负责人 in (currentUser)"
+      "suggestPlaceholder": "" // 非必填，命令行中的 suggest 展示规则，默认值 "#{sequence} [{type}] ({status}) {title?link}  {responsiblePeople?w=20}"
     }
   },
   "scripts": {

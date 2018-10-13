@@ -5,6 +5,7 @@ const fuzzy = require('fuzzy')
 const autoComplete = require('@moyuyc/inquirer-autocomplete-prompt')
 const nps = require('path')
 const minimist = require('minimist')
+const name = require('../package').name
 
 const utils = require('./utils')
 const i = require('../i18n')
@@ -40,14 +41,16 @@ removeArgv(['--read'])
 // We use Commonjs here, but ES6 or AMD would do just
 // fine.
 module.exports = function(options) {
-  const icafe = options.icafe
-  const prefix = icafe ? icafe.spaceId : null
+  const { config } = options.pkg || {}
   const typeChoices = utils.rightPadTypes(
     options.typeObjects,
     options.typeKeys,
     options.language
   )
   const gitRootPath = utils.getGitRootPath()
+  const rcConfig = config ? config[name] : {}
+  const icafe = Object.assign({}, options.icafe, rcConfig)
+  const prefix = icafe ? icafe.spaceId : null
 
   function makeSuggest({ always = false } = {}) {
     return function suggestIcafeIssues(anw, input, rl) {

@@ -151,7 +151,9 @@ function suggestIcafeIssues(
     iql = '负责人 in (currentUser)',
     suggestPlaceholder = '#{sequence} [{type}] ({status}) {title?link}  {responsiblePeople?w=20}',
 
-    always
+    always,
+
+    ...restData
   } = {}
 ) {
   input = input || ''
@@ -160,9 +162,11 @@ function suggestIcafeIssues(
     delimiter: '\\s,'
   })
 
-  let isStartIssue = matching.startsWith('#')
-
-  if (/^([a-zA-Z][\w-]+)-(.*)$/.test(matching)) {
+  let isStartIssue = false
+  if (matching.startsWith('#')) {
+    isStartIssue = true
+    matching = matching.slice(1)
+  } else if (/^([a-zA-Z][\w-]+)-(.*)$/.test(matching)) {
     isStartIssue = true
     spaceId = RegExp.$1
     matching = RegExp.$2
@@ -173,16 +177,19 @@ function suggestIcafeIssues(
   }
 
   if (spaceId) {
-    const data = {
-      spaceId,
-      username,
-      password,
-      page: 1,
-      iql,
-      order: 'createTime',
-      isDesc: false
-      // maxRecords: 30
-    }
+    const data = Object.assign(
+      {
+        spaceId,
+        username,
+        password,
+        page: 1,
+        iql,
+        order: 'createTime',
+        isDesc: false
+        // maxRecords: 30
+      },
+      restData
+    )
     return memoizedFetch(data).then(res => {
       if (res.body.code !== 200) {
         return []
@@ -198,7 +205,6 @@ function suggestIcafeIssues(
         return width
       })
 
-      const hasPositive = colWidths.some(Boolean)
       const table = newTable({
         colWidths
         // colWidths: hasPositive ? colWidths : void 0
@@ -255,7 +261,7 @@ function suggestIcafeIssues(
       return fuzzy
         .filter(matching, choices, {
           extract: function(el) {
-            return el.name
+            return el.value + ' ' + el.name
           }
         })
         .map(x => x.original)
