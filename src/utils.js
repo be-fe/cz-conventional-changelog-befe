@@ -149,7 +149,7 @@ function suggestIcafeIssues(
     username = Card.constructor.defaultData.username,
     password = Card.constructor.defaultData.password,
     iql = '负责人 in (currentUser)',
-    suggestPlaceholder = '#{sequence} [{type}] ({status}) {title?link}  {responsiblePeople?w=20}',
+    suggestPlaceholder = '#{sequence} [{type?align=center}] ({status?align=center}) {title?link}  {responsiblePeople?w=20}',
 
     always,
 
@@ -226,6 +226,9 @@ function suggestIcafeIssues(
                     simplifiedData.sequence
                   }/show`
                 )
+              }
+              if (typeof d.data.align === 'string') {
+                str = { hAlign: d.data.align, content: str }
               }
               row.push(str)
             } else {

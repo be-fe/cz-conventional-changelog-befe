@@ -91,7 +91,7 @@ npm install commitizen \
     },
     "@baidu/cz-conventional-changelog-befe": {
       "iql": "",  // 非必填，高级搜索的字段，默认值为 "负责人 in (currentUser)"
-      "suggestPlaceholder": "" // 非必填，命令行中的 suggest 展示规则，默认值 "#{sequence} [{type}] ({status}) {title?link}  {responsiblePeople?w=20}"
+      "suggestPlaceholder": "" // 非必填，命令行中的 suggest 展示规则，默认值 "#{sequence} [{type?align=center}] ({status?align=center}) {title?link}  {responsiblePeople?w=20}"
     }
   },
   "scripts": {
@@ -124,18 +124,19 @@ npm install commitizen \
 
 该字段用来配置 icafe suggest 条目展示规则
 
-如默认为 `'#{sequence} [{type}] ({status}) {title?link} {responsiblePeople?w=20}'` 对应展示如下图：
+如默认为 `'#{sequence} [{type?align=center}] ({status?align=center}) {title?link} {responsiblePeople?w=20}'` 对应展示如下图：
 
-![](https://i.loli.net/2018/10/13/5bc200759539f.png)
+![](http://obu9je6ng.bkt.clouddn.com//1539570849.png?imageMogr2/thumbnail/!100p)
 
 其中支持的数据字段在 [placeholder.data.json](./__tests__/fixture/placeholder.data.json)
 
 其中的 `title?link` 表示传参 `link`，支持的传参有：
 
-| 参数 | 说明                                                      | 类型    |
-| ---- | --------------------------------------------------------- | ------- |
-| link | 是否在该字段上显示使用超链接（ Cmd + 左键 跳转至 icafe ） | boolean |
-| w    | 该字段的最大宽度大小，超出用 '...' 结尾                   | number  |
+| 参数    | 说明                                                      | 类型                          |
+| ------- | --------------------------------------------------------- | ----------------------------- |
+| `link`  | 是否在该字段上显示使用超链接（ Cmd + 左键 跳转至 icafe ） | `boolean`                     |
+| `w`     | 该字段的最大宽度大小，超出用 '...' 结尾                   | `number`                      |
+| `align` | 该字段的水平对齐规则                                      | `'left' | 'right' | 'center'` |
 
 ### `icafe-api` 参数配置
 
