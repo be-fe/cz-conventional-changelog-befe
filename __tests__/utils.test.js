@@ -285,7 +285,7 @@ Array [
   it('should utils.suggestIcafeIssues', function() {
     return util
       .suggestIcafeIssues(
-        '候选人中心"offer三方"模块增加',
+        '4099候选人模块增加三方的联系信息',
         { cursor: 0 },
         {
           spaceId: 'New-Offer-Onboarding-Project',
@@ -295,14 +295,11 @@ Array [
         }
       )
       .then(list => {
-        expect(list).toEqual([
-          {
-            cursor: 33,
-            name:
-              '#4099 [任务 ] (PM功能验收) 候选人中心"offer三方"模块增加三方的联系信息 (http://newicafe.baidu.com/issue/New-Offer-Onboarding-Project-4099/show)',
-            value: 'New-Offer-Onboarding-Project-4099'
-          }
-        ])
+        expect(list.length).toBe(1)
+        expect(list[0]).toMatchObject({
+          cursor: 33,
+          value: 'New-Offer-Onboarding-Project-4099'
+        })
       })
   })
 })
