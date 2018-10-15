@@ -1,3 +1,9 @@
+## [1.3.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.0...v1.3.1) (2018-10-15)
+
+### 修复
+
+- catch error ([0ff3c6b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/0ff3c6b))
+
 # [1.3.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.2...v1.3.0) (2018-10-15)
 
 ### 新特性
