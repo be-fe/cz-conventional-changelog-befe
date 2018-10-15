@@ -1,3 +1,9 @@
+## [1.3.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.1...v1.3.2) (2018-10-15)
+
+### 修复
+
+- move inquirer as dep ([53bfc8e](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/53bfc8e))
+
 ## [1.3.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.0...v1.3.1) (2018-10-15)
 
 ### 修复
