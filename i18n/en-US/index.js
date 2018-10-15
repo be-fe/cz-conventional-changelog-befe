@@ -1,3 +1,5 @@
+const chalk = require('chalk').default
+
 module.exports = {
   'first.hint':
     '\nLine 1 will be cropped at 100 characters. All other ' +
@@ -16,5 +18,9 @@ module.exports = {
     "1. use icafe prefix config, you can start with '#' (e.g. close #123)\n" +
     "2. without icafe prefix config, just don't start with '#' (e.g. fix asset-123 123 12312)\n" +
     "3. multiple issues seperate by space or ',' (e.g. re asset-123,#2345,#123123,hard-3)\n",
-  'subject.error': "Please write some short description here, it's required"
+  'subject.error': "Please write some short description here, it's required",
+  'warn.suggest-disabled':
+    chalk.redBright('Warning：icafe suggest is disabled，please see ') +
+    chalk.cyan('http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe') +
+    chalk.redBright(' for more information.')
 }

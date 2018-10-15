@@ -75,6 +75,11 @@ module.exports = function(options) {
     // By default, we'll de-indent your commit
     // template and will keep empty lines.
     prompter: function(cz, commit) {
+      const isSuggestEnabled = utils.isSuggestEnabled()
+      if (!isSuggestEnabled) {
+        console.warn(i18n('warn.suggest-disabled'))
+      }
+
       console.log(i18n('first.hint'))
 
       // Let's ask some questions of the user
@@ -85,7 +90,7 @@ module.exports = function(options) {
       // You can also opt to use another input
       // collection library if you prefer.
 
-      const type = prefix ? 'auto-complete' : 'input'
+      const type = isSuggestEnabled ? 'auto-complete' : 'input'
       cz.registerPrompt('auto-complete', autoComplete)
       const store = new FileStore({
         storePath: nps.join(__dirname, '../inquirer-cache.json'),

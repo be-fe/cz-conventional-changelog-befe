@@ -4,7 +4,8 @@
  * @date 2018/10/11
  * @description
  */
-const util = require('../src/utils')
+let util = require('../src/utils')
+let nps = require('path')
 
 jest.mock('@baidu/icafe-api')
 
@@ -301,5 +302,24 @@ Array [
           value: 'New-Offer-Onboarding-Project-4099'
         })
       })
+  })
+
+  describe('isSuggestEnabled', () => {
+    function setup(cwd) {
+      jest.unmock('@baidu/icafe-api')
+      jest.resetModules()
+      process.chdir(nps.join(__dirname, 'fixture', cwd))
+      util = require('../src/utils')
+    }
+
+    it('should suggest-enable', function() {
+      setup('suggest-enable')
+      expect(util.isSuggestEnabled()).toBeTruthy()
+    })
+
+    it('should suggest-disabled', function() {
+      setup('suggest-disable')
+      expect(util.isSuggestEnabled()).toBeFalsy()
+    })
   })
 })

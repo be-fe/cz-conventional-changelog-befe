@@ -140,6 +140,11 @@ function sliceString(string, maxLen) {
   return string.trim() // .slice(0, maxLen)
 }
 
+function isSuggestEnabled() {
+  const { spaceId, username, password } = Card.constructor.defaultData
+  return !!username && !!password
+}
+
 const memoizedFetch = memoize(Card.fetch.bind(Card), shallowequal)
 function suggestIcafeIssues(
   input,
@@ -295,11 +300,12 @@ function htmlDecode(str) {
 
 module.exports = {
   getPackageJsonConfigs: getPackageJsonConfigs,
-  rightPadTypes: rightPadTypes,
-  getLanguage: getLanguage,
+  rightPadTypes,
+  getLanguage,
   getGitRootPath,
   suggestIcafeIssues,
   parsePlaceholder,
   simplifyData,
-  issuesFormat: issuesFormat
+  isSuggestEnabled,
+  issuesFormat
 }

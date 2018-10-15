@@ -31,10 +31,12 @@
     "@baidu/normalize-icafe-pkg": "^1.0.2",
     "@baidu/tranz-commit-icafe": "^1.0.2",
     "@moyuyc/inquirer-autocomplete-prompt": "^1.3.0",
+    "chalk": "^2.4.1",
     "cli-table3": "^0.5.1",
     "cli-width": "^2.2.0",
     "find-up": "^3.0.0",
     "fuzzy": "^0.1.3",
+    "inquirer": "^6.2.0",
     "inquirer-store": "^1.1.1",
     "is-primitive": "^3.0.1",
     "loader-utils": "^1.1.0",
@@ -47,8 +49,7 @@
     "terminal-link": "^1.1.0",
     "tiny-i18n": "^1.1.2",
     "tranz": "^0.6.0",
-    "word-wrap": "^1.2.3",
-    "inquirer": "^6.2.0"
+    "word-wrap": "^1.2.3"
   },
   "devDependencies": {
     "@baidu/commitlint-config-befe": "^1.2.1",
