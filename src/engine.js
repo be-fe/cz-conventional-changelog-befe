@@ -232,7 +232,7 @@ module.exports = function(options) {
               })
             })
         })
-        .catch(commit)
+        .catch(console.error)
     }
   }
 }
