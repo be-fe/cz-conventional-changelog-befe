@@ -1,3 +1,9 @@
+# [1.3.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.2...v1.3.0) (2018-10-15)
+
+### 新特性
+
+- 支持 align 参数 ([bfdad5b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/bfdad5b))
+
 ## [1.2.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.1...v1.2.2) (2018-10-13)
 
 ### 修复
