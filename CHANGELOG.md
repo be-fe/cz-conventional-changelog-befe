@@ -1,3 +1,9 @@
+# [1.4.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.2...v1.4.0) (2018-10-15)
+
+### 新特性
+
+- support detect icafe-suggest enabled ([f90b30c](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/f90b30c))
+
 ## [1.3.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.1...v1.3.2) (2018-10-15)
 
 ### 修复
