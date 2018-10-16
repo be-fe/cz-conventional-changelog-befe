@@ -1,3 +1,9 @@
+# [1.5.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.4.0...v1.5.0) (2018-10-16)
+
+### 新特性
+
+- **suggest:** subject 支持 提示 icafe 卡片标题 ([8f6a7fe](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/8f6a7fe))
+
 # [1.4.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.2...v1.4.0) (2018-10-15)
 
 ### 新特性
