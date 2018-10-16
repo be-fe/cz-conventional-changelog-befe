@@ -52,12 +52,12 @@ module.exports = function(options) {
   const icafe = Object.assign({}, options.icafe, rcConfig)
   const prefix = icafe ? icafe.spaceId : null
 
-  function makeSuggest({ always = false } = {}) {
+  function makeSuggest({ always = false, suggestTitle } = {}) {
     return function suggestIcafeIssues(anw, input, rl) {
       return utils.suggestIcafeIssues(
         input,
         rl,
-        Object.assign({}, icafe || {}, { always })
+        Object.assign({}, icafe || {}, { always, suggestTitle })
       )
     }
   }
@@ -129,7 +129,7 @@ module.exports = function(options) {
               noResultText: null,
               suggestOnly: true,
               name: 'subject',
-              source: makeSuggest(),
+              source: makeSuggest({ suggestTitle: true }),
               validate: input => {
                 if (!input) {
                   return i18n('subject.error')

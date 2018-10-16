@@ -157,6 +157,7 @@ function suggestIcafeIssues(
     suggestPlaceholder = '#{sequence} [{type?align=center}] ({status?align=center}) {title?link}  {responsiblePeople?w=20}',
 
     always,
+    suggestTitle = false,
 
     ...restData
   } = {}
@@ -168,6 +169,7 @@ function suggestIcafeIssues(
   })
 
   let isStartIssue = false
+  let isSuggestTitle = false
   if (matching.startsWith('#')) {
     isStartIssue = true
     matching = matching.slice(1)
@@ -175,6 +177,9 @@ function suggestIcafeIssues(
     isStartIssue = true
     spaceId = RegExp.$1
     matching = RegExp.$2
+  } else if (suggestTitle) {
+    isStartIssue = true
+    isSuggestTitle = true
   }
 
   if (!always && !isStartIssue) {
@@ -212,7 +217,6 @@ function suggestIcafeIssues(
 
       const table = newTable({
         colWidths
-        // colWidths: hasPositive ? colWidths : void 0
       })
       const sorted = res.body.cards
 
@@ -245,8 +249,10 @@ function suggestIcafeIssues(
         })
         table.push(row)
 
-        const leftStr =
-          input.slice(0, leftIndex) + spaceId + '-' + simplifiedData.sequence
+        const leftStr = !isSuggestTitle
+          ? input.slice(0, leftIndex) + spaceId + '-' + simplifiedData.sequence
+          : input.slice(0, leftIndex) + simplifiedData.title
+
         return {
           value: leftStr + input.slice(rightIndex),
           cursor: leftStr.length

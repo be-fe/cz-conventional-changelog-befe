@@ -304,6 +304,28 @@ Array [
       })
   })
 
+  it('should utils.suggestIcafeIssues with `suggestTitle = true`', function() {
+    return util
+      .suggestIcafeIssues(
+        '4099候选人模块增加三方的联系信息',
+        { cursor: 0 },
+        {
+          spaceId: 'New-Offer-Onboarding-Project',
+          username: 'yucong02',
+          password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
+          always: true,
+          suggestTitle: true
+        }
+      )
+      .then(list => {
+        expect(list.length).toBe(1)
+        expect(list[0]).toMatchObject({
+          cursor: 25,
+          value: '候选人中心"offer三方"模块增加三方的联系信息'
+        })
+      })
+  })
+
   describe('isSuggestEnabled', () => {
     function setup(cwd) {
       jest.unmock('@baidu/icafe-api')
