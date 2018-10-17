@@ -6,6 +6,7 @@
  */
 let util = require('../src/utils')
 let nps = require('path')
+let { __setFetch } = require('@baidu/icafe-api')
 
 jest.mock('@baidu/icafe-api')
 
@@ -287,47 +288,101 @@ Array [
 `)
   })
 
-  it('should utils.suggestIcafeIssues', function() {
-    return util
-      .suggestIcafeIssues(
-        '4099候选人模块增加三方的联系信息',
-        { cursor: 0 },
-        {
-          spaceId: 'New-Offer-Onboarding-Project',
-          username: 'yucong02',
-          password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
-          always: true
-        }
-      )
-      .then(list => {
-        expect(list.length).toBe(1)
-        expect(list[0]).toMatchObject({
-          cursor: 33,
-          value: 'New-Offer-Onboarding-Project-4099'
-        })
-      })
-  })
+  describe('suggestIcafeIssues', () => {
+    beforeEach(() => {
+      __setFetch()
+    })
 
-  it('should utils.suggestIcafeIssues with `suggestTitle = true`', function() {
-    return util
-      .suggestIcafeIssues(
-        '4099候选人模块增加三方的联系信息',
-        { cursor: 0 },
-        {
-          spaceId: 'New-Offer-Onboarding-Project',
-          username: 'yucong02',
-          password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
-          always: true,
-          suggestTitle: true
-        }
-      )
-      .then(list => {
-        expect(list.length).toBe(1)
-        expect(list[0]).toMatchObject({
-          cursor: 25,
-          value: '候选人中心"offer三方"模块增加三方的联系信息'
+    it('should utils.suggestIcafeIssues', function(done) {
+      __setFetch()
+      util
+        .suggestIcafeIssues(
+          '4099候选人模块增加三方的联系信息',
+          { cursor: 0 },
+          {
+            spaceId: 'New-Offer-Onboarding-Project',
+            username: 'yucong02',
+            password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
+            always: true
+          }
+        )
+        .then(list => {
+          expect(list.length).toBe(1)
+          expect(list[0]).toMatchObject({
+            cursor: 33,
+            value: 'New-Offer-Onboarding-Project-4099'
+          })
+
+          const fn = jest.fn(() => Promise.reject(new Error('some error')))
+          __setFetch(fn)
+
+          util
+            .suggestIcafeIssues(
+              '4099候选人模块增加三方的联系信息',
+              { cursor: 0 },
+              {
+                spaceId: 'New-Offer-Onboarding-Project',
+                username: 'yucong02',
+                password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
+                always: true
+              }
+            )
+            .then(d => {
+              // Cached
+              expect(fn).not.toBeCalled()
+              done()
+            })
+            .catch(done)
+        })
+    })
+
+    it('should utils.suggestIcafeIssues when error be thrown', function() {
+      const fn = jest.fn(() => Promise.reject(new Error('some error')))
+      __setFetch(fn)
+
+      const call = () =>
+        util.suggestIcafeIssues(
+          '4099候选人模块增加三方的联系信息',
+          { cursor: 0 },
+          {
+            spaceId: 'New-Offer-Onboarding-Project',
+            username: 'yucong02',
+            password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
+            always: true
+          }
+        )
+      return call().catch(err => {
+        expect(err.message).toBe('some error')
+
+        // Cache clear
+        call().catch(err => {
+          expect(err.message).toBe('some error')
+          expect(fn).toBeCalledTimes(2)
         })
       })
+    })
+
+    it('should utils.suggestIcafeIssues with `suggestTitle = true`', function() {
+      return util
+        .suggestIcafeIssues(
+          '4099候选人模块增加三方的联系信息',
+          { cursor: 0 },
+          {
+            spaceId: 'New-Offer-Onboarding-Project',
+            username: 'yucong02',
+            password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
+            always: true,
+            suggestTitle: true
+          }
+        )
+        .then(list => {
+          expect(list.length).toBe(1)
+          expect(list[0]).toMatchObject({
+            cursor: 25,
+            value: '候选人中心"offer三方"模块增加三方的联系信息'
+          })
+        })
+    })
   })
 
   describe('isSuggestEnabled', () => {

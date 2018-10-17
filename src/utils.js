@@ -163,7 +163,11 @@ function unlinkify(text, replacer) {
 
 const INCREASE_LEN = linkify('').length
 
-const memoizedFetch = memoize(Card.fetch.bind(Card), shallowequal)
+function generateFetch() {
+  return memoize(Card.fetch.bind(Card), shallowequal)
+}
+
+let memoizedFetch = generateFetch()
 function suggestIcafeIssues(
   input,
   rl = {},
@@ -219,115 +223,129 @@ function suggestIcafeIssues(
       },
       restData
     )
-    return memoizedFetch(data).then(res => {
-      if (res.body.code !== 200) {
-        return []
-      }
-      const parsed = parsePlaceholder(suggestPlaceholder)
-      const colWidths = parsed.map(d => {
-        let width = null
-        if (d.type === 'data') {
-          if (d.data.hasOwnProperty('w')) {
-            if (d.data.w.trim().endsWith('%')) {
-              width = parseInt(parseInt(d.data.w) * 0.01 * cliWidth())
-            } else {
-              width = parseInt(d.data.w)
-            }
-            // link 会加上 包裹符，所以 width 需要加上包裹符的长度
-            if (d.data.link && linkEnabled) {
-              width += INCREASE_LEN
-            }
-          }
+    return memoizedFetch(data)
+      .then(res => {
+        if (res.body.code !== 200) {
+          return []
         }
-        return width
-      })
-
-      const table = newTable({
-        colWidths
-      })
-      const sorted = res.body.cards
-
-      let choices = sorted.map(card => {
-        card.title = htmlDecode(card.title)
-        const simplifiedData = simplifyData(card)
-        const row = []
-        parsed.forEach(d => {
+        const parsed = parsePlaceholder(suggestPlaceholder)
+        const colWidths = parsed.map(d => {
+          let width = null
           if (d.type === 'data') {
-            if (d.value in simplifiedData) {
-              let str = String(simplifiedData[d.value])
+            if (d.data.hasOwnProperty('w')) {
+              if (d.data.w.trim().endsWith('%')) {
+                width = parseInt(parseInt(d.data.w) * 0.01 * cliWidth())
+              } else {
+                width = parseInt(d.data.w)
+              }
+              // link 会加上 包裹符，所以 width 需要加上包裹符的长度
               if (d.data.link && linkEnabled) {
-                str = linkify(str)
+                width += INCREASE_LEN
               }
-              if (typeof d.data.align === 'string') {
-                str = { hAlign: d.data.align, content: str }
+            }
+          }
+          return width
+        })
+
+        const table = newTable({
+          colWidths
+        })
+        const sorted = res.body.cards
+
+        let choices = sorted.map(card => {
+          card.title = htmlDecode(card.title)
+          const simplifiedData = simplifyData(card)
+          const row = []
+          parsed.forEach(d => {
+            if (d.type === 'data') {
+              if (d.value in simplifiedData) {
+                let str = String(simplifiedData[d.value])
+                if (d.data.link && linkEnabled) {
+                  str = linkify(str)
+                }
+                if (typeof d.data.align === 'string') {
+                  str = { hAlign: d.data.align, content: str }
+                }
+                row.push(str)
+              } else {
+                row.push(`{${d.value}}`)
               }
-              row.push(str)
             } else {
-              row.push(`{${d.value}}`)
+              row.push(d.value)
             }
-          } else {
-            row.push(d.value)
+          })
+          table.push(row)
+
+          const leftStr = !isSuggestTitle
+            ? input.slice(0, leftIndex) +
+              spaceId +
+              '-' +
+              simplifiedData.sequence
+            : input.slice(0, leftIndex) + simplifiedData.title
+
+          return {
+            simplifiedData,
+            value: leftStr + input.slice(rightIndex),
+            cursor: leftStr.length
           }
         })
-        table.push(row)
 
-        const leftStr = !isSuggestTitle
-          ? input.slice(0, leftIndex) + spaceId + '-' + simplifiedData.sequence
-          : input.slice(0, leftIndex) + simplifiedData.title
+        const tableLines = table.toString().split('\n')
+        choices = choices.map((data, index) => {
+          const len = Math.min(
+            cliWidth() - 10 /* the length of `prefix + suffix` */,
+            tableLines[index].length
+          )
 
-        return {
-          simplifiedData,
-          value: leftStr + input.slice(rightIndex),
-          cursor: leftStr.length
-        }
-      })
-
-      const tableLines = table.toString().split('\n')
-      choices = choices.map((data, index) => {
-        const len = Math.min(
-          cliWidth() - 10 /* the length of `prefix + suffix` */,
-          tableLines[index].length
-        )
-
-        const line = unlinkify(
-          tableLines[index],
-          (str, { endIndex, times }) => {
-            let end = endIndex - times * INCREASE_LEN
-            if (end < len /*&& cliWidth() >= 140*/) {
-              return terminalLink(
-                str,
-                `http://newicafe.baidu.com/issue/${spaceId}-${
-                  data.simplifiedData.sequence
-                }/show`,
-                { fallback: text => text }
-              )
+          const line = unlinkify(
+            tableLines[index],
+            (str, { endIndex, times }) => {
+              let end = endIndex - times * INCREASE_LEN
+              if (end < len /*&& cliWidth() >= 140*/) {
+                return terminalLink(
+                  str,
+                  `http://newicafe.baidu.com/issue/${spaceId}-${
+                    data.simplifiedData.sequence
+                  }/show`,
+                  { fallback: text => text }
+                )
+              }
+              return str
             }
-            return str
-          }
-        )
+          )
 
-        // console.error('cliWidth()', cliWidth())
-        // console.error('len', len)
-        // console.error('line', JSON.stringify(line))
-        // console.error('stripAnsi', stripAnsi(line))
-        // console.error('sliceString(line, len)', sliceString(line, len))
-
-        return {
-          // name: sliceString(line, len),
-          name: line.trim().replace(/[\r\n]/g, ' '),
-          value: data.value,
-          cursor: data.cursor
-        }
-      })
-
-      return fuzzy
-        .filter(matching, choices, {
-          extract: function(el) {
-            return el.value + ' ' + el.name
+          return {
+            // name: sliceString(line, len),
+            data: data.simplifiedData,
+            name: line,
+            value: data.value,
+            cursor: data.cursor
           }
         })
-        .map(x => x.original)
-    })
+
+        return fuzzy
+          .filter(matching, choices, {
+            extract: function(el) {
+              const data = el.data
+              return [
+                data.sequence,
+                data.title,
+                data.type,
+                data.status,
+                String(data.responsiblePeople)
+              ].join(' ')
+            }
+          })
+          .map(x => {
+            delete x.original.data
+            return x.original
+          })
+      })
+      .catch(err => {
+        // 去除已经存储的 fetch
+        memoizedFetch = generateFetch()
+        throw err
+      })
   }
 
   return Promise.resolve([])
