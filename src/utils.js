@@ -134,7 +134,7 @@ function simplifyData(data = {}) {
 function sliceString(string, maxLen) {
   const striped = stripAnsi(string)
   if (striped.length > maxLen) {
-    if (!/\s$/.test(striped)) return string.slice(0, maxLen - 3) + '...'
+    if (!/\s$/.test(striped)) return string.slice(0, maxLen - 1) + '…'
     return string.slice(0, maxLen).trim()
   }
   return string.trim() // .slice(0, maxLen)
@@ -145,6 +145,24 @@ function isSuggestEnabled() {
   return !!username && !!password
 }
 
+function linkify(text = '') {
+  return `#__link__#${text}#__link__#`
+}
+
+function lastOfLink(string) {
+  return string.lastIndexOf('#__link__#')
+}
+
+function unlinkify(text, replacer) {
+  const reg = /#__link__#(.*)?#__link__#/g
+  let i = 0
+  return text.replace(reg, (_, m) =>
+    replacer(m, { times: ++i, endIndex: RegExp.lastMatch.length })
+  )
+}
+
+const INCREASE_LEN = linkify('').length
+
 const memoizedFetch = memoize(Card.fetch.bind(Card), shallowequal)
 function suggestIcafeIssues(
   input,
@@ -154,7 +172,7 @@ function suggestIcafeIssues(
     username = Card.constructor.defaultData.username,
     password = Card.constructor.defaultData.password,
     iql = '负责人 in (currentUser)',
-    suggestPlaceholder = '#{sequence} [{type?align=center}] ({status?align=center}) {title?link}  {responsiblePeople?w=20}',
+    suggestPlaceholder = '#{sequence?link} [{type?align=center}] ({status?align=center}) {title?w=35%}  {responsiblePeople?w=10%}',
 
     always,
     suggestTitle = false,
@@ -186,6 +204,7 @@ function suggestIcafeIssues(
     return Promise.resolve([])
   }
 
+  const linkEnabled = cliWidth() > 140
   if (spaceId) {
     const data = Object.assign(
       {
@@ -209,7 +228,15 @@ function suggestIcafeIssues(
         let width = null
         if (d.type === 'data') {
           if (d.data.hasOwnProperty('w')) {
-            width = parseInt(d.data.w)
+            if (d.data.w.trim().endsWith('%')) {
+              width = parseInt(parseInt(d.data.w) * 0.01 * cliWidth())
+            } else {
+              width = parseInt(d.data.w)
+            }
+            // link 会加上 包裹符，所以 width 需要加上包裹符的长度
+            if (d.data.link && linkEnabled) {
+              width += INCREASE_LEN
+            }
           }
         }
         return width
@@ -228,13 +255,8 @@ function suggestIcafeIssues(
           if (d.type === 'data') {
             if (d.value in simplifiedData) {
               let str = String(simplifiedData[d.value])
-              if (d.data.link) {
-                str = terminalLink(
-                  str,
-                  `http://newicafe.baidu.com/issue/${spaceId}-${
-                    simplifiedData.sequence
-                  }/show`
-                )
+              if (d.data.link && linkEnabled) {
+                str = linkify(str)
               }
               if (typeof d.data.align === 'string') {
                 str = { hAlign: d.data.align, content: str }
@@ -254,6 +276,7 @@ function suggestIcafeIssues(
           : input.slice(0, leftIndex) + simplifiedData.title
 
         return {
+          simplifiedData,
           value: leftStr + input.slice(rightIndex),
           cursor: leftStr.length
         }
@@ -262,11 +285,36 @@ function suggestIcafeIssues(
       const tableLines = table.toString().split('\n')
       choices = choices.map((data, index) => {
         const len = Math.min(
-          cliWidth() - 24 /* the length of `prefix + suffix` */,
+          cliWidth() - 10 /* the length of `prefix + suffix` */,
           tableLines[index].length
         )
+
+        const line = unlinkify(
+          tableLines[index],
+          (str, { endIndex, times }) => {
+            let end = endIndex - times * INCREASE_LEN
+            if (end < len /*&& cliWidth() >= 140*/) {
+              return terminalLink(
+                str,
+                `http://newicafe.baidu.com/issue/${spaceId}-${
+                  data.simplifiedData.sequence
+                }/show`,
+                { fallback: text => text }
+              )
+            }
+            return str
+          }
+        )
+
+        // console.error('cliWidth()', cliWidth())
+        // console.error('len', len)
+        // console.error('line', JSON.stringify(line))
+        // console.error('stripAnsi', stripAnsi(line))
+        // console.error('sliceString(line, len)', sliceString(line, len))
+
         return {
-          name: sliceString(tableLines[index], len),
+          // name: sliceString(line, len),
+          name: line.trim().replace(/[\r\n]/g, ' '),
           value: data.value,
           cursor: data.cursor
         }

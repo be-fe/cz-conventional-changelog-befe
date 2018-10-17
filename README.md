@@ -124,19 +124,19 @@ npm install commitizen \
 
 该字段用来配置 icafe suggest 条目展示规则
 
-如默认为 `'#{sequence} [{type?align=center}] ({status?align=center}) {title?link} {responsiblePeople?w=20}'` 对应展示如下图：
+如默认为 `'#{sequence?link} [{type?align=center}] ({status?align=center}) {title?w=35%} {responsiblePeople?w=10%}'` 对应展示如下图：
 
-![](http://obu9je6ng.bkt.clouddn.com//1539570849.png?imageMogr2/thumbnail/!100p)
+![](http://obu9je6ng.bkt.clouddn.com//1539780509.png?imageMogr2/thumbnail/!100p)
 
 其中支持的数据字段在 [placeholder.data.json](./__tests__/fixture/placeholder.data.json)
 
 其中的 `title?link` 表示传参 `link`，支持的传参有：
 
-| 参数    | 说明                                                      | 类型                                |
-| ------- | --------------------------------------------------------- | ----------------------------------- |
-| `link`  | 是否在该字段上显示使用超链接（ Cmd + 左键 跳转至 icafe ） | `boolean`                           |
-| `w`     | 该字段的最大宽度大小，超出用 '...' 结尾                   | `number`                            |
-| `align` | 该字段的水平对齐规则                                      | `'left'` OR `'right'` OR `'center'` |
+| 参数    | 说明                                                                                                                     | 类型                                |
+| ------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------- |
+| `link`  | 是否在该字段上显示使用超链接（ Cmd + 左键 跳转至 icafe ）, 当命令行宽度大于 140 时，该功能才开启；小于时候有文本换行 bug | `boolean`                           |
+| `w`     | 该字段的最大宽度大小，超出用 '...' 结尾，如 `30%` 或者 `100`                                                             | `number|string`                     |
+| `align` | 该字段的水平对齐规则                                                                                                     | `'left'` OR `'right'` OR `'center'` |
 
 ### `icafe-api` 参数配置
 

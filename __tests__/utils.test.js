@@ -234,7 +234,10 @@ describe('utils', function() {
 
   it('should utils.parsePlaceholder.js', () => {
     expect(
-      util.parsePlaceholder('#{type} {noop} {title?flag} {所属计划?}{}', data)
+      util.parsePlaceholder(
+        '#{type} {noop} {title?flag&w=20%} {所属计划?}{}',
+        data
+      )
     ).toMatchInlineSnapshot(`
 Array [
   Object {
@@ -262,6 +265,7 @@ Array [
   Object {
     "data": Object {
       "flag": true,
+      "w": "20%",
     },
     "type": "data",
     "value": "title",
