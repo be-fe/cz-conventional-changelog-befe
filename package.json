@@ -76,7 +76,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./index.js"
+      "path": "./lib/index"
     },
     "@baidu/cz-conventional-changelog-befe": {}
   },
