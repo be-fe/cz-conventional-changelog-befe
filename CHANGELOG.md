@@ -1,3 +1,9 @@
+# [1.7.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.6.1...v1.7.0) (2018-10-17)
+
+### 修复
+
+- **suggestPlaceholder:** 调整规则 ([4d0320e](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/4d0320e))
+
 ## [1.6.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.6.0...v1.6.1) (2018-10-17)
 
 # [1.6.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.5.0...v1.6.0) (2018-10-16)
