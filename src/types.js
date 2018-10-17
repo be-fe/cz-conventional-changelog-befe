@@ -1,4 +1,4 @@
-var i = require('./i18n')
+var i = require('./i18n/index')
 
 module.exports = {
   build: {

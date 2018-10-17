@@ -8,7 +8,7 @@ const minimist = require('minimist')
 const name = require('../package').name
 
 const utils = require('./utils')
-const i = require('../i18n')
+const i = require('./i18n')
 const i18n = i.i18n
 
 const filter = function(array) {

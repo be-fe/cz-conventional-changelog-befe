@@ -6,7 +6,7 @@
  */
 
 const pleaseUpgradeNode = require('please-upgrade-node')
-const pkg = require('./package.json')
+const pkg = require('../package.json')
 
 // Node version isn't supported, skip
 pleaseUpgradeNode(pkg, {

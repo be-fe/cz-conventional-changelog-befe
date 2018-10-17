@@ -2,13 +2,16 @@
   "name": "@baidu/cz-conventional-changelog-befe",
   "version": "1.6.0",
   "description": "cz-conventional-changelog preset for baidu BEFE.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "commit": "git-cz",
     "test": "jest",
     "version": "npm run changelog",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "precommit": "pretty-quick --staged",
+    "build": "rimraf lib && babel src -Dd lib",
+    "dev": "npm run build -- -w",
+    "prepare": "npm run build",
     "prepublishOnly": "npm test",
     "changelog": "conventional-changelog -p @baidu/befe -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
   },
@@ -56,12 +59,16 @@
     "@baidu/conventional-changelog-befe": "^1.3.1",
     "@commitlint/cli": "^7.1.1",
     "@types/jest": "^23.3.5",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "commitizen": "^3.0.2",
     "conventional-changelog-cli": "^2.0.5",
     "husky": "^0.14.3",
     "jest": "^23.6.0",
     "prettier": "^1.14.3",
-    "pretty-quick": "^1.7.0"
+    "pretty-quick": "^1.7.0",
+    "rimraf": "^2.6.2"
   },
   "lang": "zh",
   "icafe": {
@@ -73,8 +80,16 @@
     },
     "@baidu/cz-conventional-changelog-befe": {}
   },
+  "babel": {
+    "presets": [
+      "env"
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
+  },
   "engines": {
-    "node": ">=7"
+    "node": ">=6"
   },
   "commitlint": {
     "extends": [
