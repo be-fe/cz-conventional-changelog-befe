@@ -144,6 +144,10 @@ npm install commitizen \
 
 建议将 `password` 以系统环境变量形式存储 `export ICAFE_PASSWORD=foo;`
 
+其中 icafe 用户名和密码, 在 http://icafe.baidu.com/users/virtual 中查看.
+
+**注意: 上述网站中的密码不能直接使用,需要经过 `decodeURIComponent('password')` 后, 才能赋值使用**
+
 `username` 则在项目目录下设置 `git config user.name "Your Name Here"`，一般 icode 推荐的 clone repo 方式会自动注入用户名至 git 配置
 
 ## Example
