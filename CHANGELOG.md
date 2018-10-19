@@ -1,3 +1,5 @@
+## [1.7.3](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.2...v1.7.3) (2018-10-19)
+
 ## [1.7.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.1...v1.7.2) (2018-10-19)
 
 ### 新特性
@@ -69,7 +71,7 @@
 - fix commitlint warning ([62fa100](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/62fa100))
 - fix error when generate changelog ([ef1b38b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/ef1b38b)), 关闭 [befe-erp#385](http://newicafe.baidu.com/issue/befe-erp-385/show)
 - fix npm dependences of changelog ([383eac1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/383eac1)), 关闭 [befe-erp#385](http://newicafe.baidu.com/issue/befe-erp-385/show)
-- **abc:** lalalalala ([24934d6](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/24934d6)), 关闭 [#1232](http://newicafe.baidu.com/issue/hiwenjuan-1232/show) [#2222](http://newicafe.baidu.com/issue/hiwenjuan-2222/show)
+- **abc:** lalalalala ([24934d6](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/24934d6)), 关闭 [#1232](http://newicafe.baidu.com/issue/undefined-1232/show) [#2222](http://newicafe.baidu.com/issue/undefined-2222/show)
 - **abc:** lalalalala ([d358525](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/d358525))
 - 对于 `-abc-` 不进行 suggest ([7f43357](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/7f43357))
 
