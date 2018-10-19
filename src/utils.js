@@ -13,6 +13,8 @@ const cliWidth = require('cli-width')
 const sliceInput = require('@moyuyc/inquirer-autocomplete-prompt/slice-input')
 const terminalLink = require('terminal-link')
 const stripAnsi = require('strip-ansi')
+const stringWidth = require('string-width')
+
 const parsePlaceholder = require('./parsePlaceholder')
 const debug = require('debug')('cz-conventional-changelog-befe')
 
@@ -135,12 +137,26 @@ function simplifyData(data = {}) {
 }
 
 function sliceString(string, maxLen) {
-  const striped = stripAnsi(string)
-  if (striped.length > maxLen) {
-    if (!/\s$/.test(striped)) return string.slice(0, maxLen - 1) + '…'
-    return string.slice(0, maxLen).trim()
+  let striped = stripAnsi(string)
+
+  const ellipsis = '…'
+  const ellipsisLen = stringWidth(ellipsis)
+  let isSliced = false
+  while (
+    stringWidth(striped) >
+    maxLen - (striped.endsWith(ellipsis) ? 0 : ellipsisLen)
+  ) {
+    isSliced = true
+    if (/\s$/.test(striped)) {
+      striped = striped.replace(/\s+$/, '')
+    } else {
+      striped = striped.slice(0, -1)
+    }
   }
-  return string.trim() // .slice(0, maxLen)
+  if (isSliced && !striped.endsWith(ellipsis)) {
+    string = striped + ellipsis
+  }
+  return string // .slice(0, maxLen)
 }
 
 function isSuggestEnabled() {
@@ -156,7 +172,7 @@ function lastOfLink(string) {
   return string.lastIndexOf('#__link__#')
 }
 
-function unlinkify(text, replacer) {
+function unlinkify(text, replacer = m => m) {
   const reg = /#__link__#(.*)?#__link__#/g
   let i = 0
   return text.replace(reg, (_, m) =>
@@ -290,6 +306,7 @@ function suggestIcafeIssues(
             : input.slice(0, leftIndex) + simplifiedData.title
 
           return {
+            row,
             simplifiedData,
             value: leftStr + input.slice(rightIndex),
             cursor: leftStr.length
@@ -297,15 +314,18 @@ function suggestIcafeIssues(
         })
 
         const tableLines = table.toString().split('\n')
+        debug(tableLines)
+        debug(
+          'choices.length: %d, tableLines.length: %d.',
+          choices.length,
+          tableLines.length
+        )
         choices = choices.map((data, index) => {
-          const len = Math.min(
-            cliWidth() - 10 /* the length of `prefix + suffix` */,
-            tableLines[index].length
-          )
-
-          const line = unlinkify(
-            tableLines[index],
-            (str, { endIndex, times }) => {
+          let line = null
+          let len = cliWidth() - 10 /* the length of `prefix + suffix` */
+          if (tableLines[index]) {
+            len = Math.min(len, tableLines[index].length)
+            line = unlinkify(tableLines[index], (str, { endIndex, times }) => {
               let end = endIndex - times * INCREASE_LEN
               if (end < len /*&& cliWidth() >= 140*/) {
                 return terminalLink(
@@ -317,13 +337,30 @@ function suggestIcafeIssues(
                 )
               }
               return str
-            }
-          )
+            })
+          }
+
+          let name = line
+          if (line == null) {
+            name = sliceString(
+              data.row
+                .map(cell => {
+                  let str = ''
+                  if (typeof cell === 'string') {
+                    str = cell
+                  } else if (cell && typeof cell.content === 'string') {
+                    str = cell.content
+                  }
+                  return unlinkify(str)
+                })
+                .join(''),
+              len
+            )
+          }
 
           return {
-            // name: sliceString(line, len),
             data: data.simplifiedData,
-            name: line,
+            name,
             value: data.value,
             cursor: data.cursor
           }
