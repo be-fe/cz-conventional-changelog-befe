@@ -72,11 +72,7 @@
     "rimraf": "^2.6.2"
   },
   "lang": "zh",
-  "icafe": {
-    "password": "VVVxxn4mcrf5NYYDixpbFbt+zSPdFS/accF",
-    "username": "chenmanqing",
-    "spaceId": "hiwenjuan"
-  },
+  "icafe": {},
   "config": {
     "commitizen": {
       "path": "./lib/index"
