@@ -1,3 +1,9 @@
+## [1.7.4](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.3...v1.7.4) (2018-10-19)
+
+### 修复
+
+- 加上 tableline 不存在情况下的，显示 fallback ([3532c00](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/3532c00))
+
 ## [1.7.3](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.2...v1.7.3) (2018-10-19)
 
 ## [1.7.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.1...v1.7.2) (2018-10-19)
@@ -69,9 +75,9 @@
 ### 修复
 
 - fix commitlint warning ([62fa100](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/62fa100))
-- fix error when generate changelog ([ef1b38b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/ef1b38b)), 关闭 [befe-erp#385](http://newicafe.baidu.com/issue/befe-erp-385/show)
-- fix npm dependences of changelog ([383eac1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/383eac1)), 关闭 [befe-erp#385](http://newicafe.baidu.com/issue/befe-erp-385/show)
-- **abc:** lalalalala ([24934d6](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/24934d6)), 关闭 [#1232](http://newicafe.baidu.com/issue/undefined-1232/show) [#2222](http://newicafe.baidu.com/issue/undefined-2222/show)
+- fix error when generate changelog ([ef1b38b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/ef1b38b)), 关闭 [#385](http://newicafe.baidu.com/issue/befe-erp-385/show)
+- fix npm dependences of changelog ([383eac1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/383eac1)), 关闭 [#385](http://newicafe.baidu.com/issue/befe-erp-385/show)
+- **abc:** lalalalala ([24934d6](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/24934d6)), 关闭 [#1232](http://newicafe.baidu.com/issue/befe-erp-1232/show) [#2222](http://newicafe.baidu.com/issue/befe-erp-2222/show)
 - **abc:** lalalalala ([d358525](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/d358525))
 - 对于 `-abc-` 不进行 suggest ([7f43357](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/7f43357))
 
@@ -81,13 +87,13 @@
 
 ### 新特性
 
-- add cz prompter feature completed ([9242883](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/9242883)), 关闭 [befe-erp#385](http://newicafe.baidu.com/issue/befe-erp-385/show)
+- add cz prompter feature completed ([9242883](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/9242883)), 关闭 [#385](http://newicafe.baidu.com/issue/befe-erp-385/show)
 - **okk:** hhhh ([2fa6dbb](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/2fa6dbb))
 - 支持 icafe suggest + --restore-cache ([56172c8](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/56172c8))
 
 ### 样式
 
-- **sss:** 修复罗干问题 ([b9fa41d](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/b9fa41d)), 关闭 [befe-erp#123](http://newicafe.baidu.com/issue/befe-erp-123/show) [befe-erp#222](http://newicafe.baidu.com/issue/befe-erp-222/show)
+- **sss:** 修复罗干问题 ([b9fa41d](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/b9fa41d)), 关闭 [#123](http://newicafe.baidu.com/issue/befe-erp-123/show) [#222](http://newicafe.baidu.com/issue/befe-erp-222/show)
 
 ### 突破性变化
 
