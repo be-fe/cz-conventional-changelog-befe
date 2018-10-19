@@ -90,8 +90,7 @@ npm install commitizen \
       "path": "./node_modules/@baidu/cz-conventional-changelog-befe"
     },
     "@baidu/cz-conventional-changelog-befe": {
-      "iql": "",  // 非必填，高级搜索的字段，默认值为 "负责人 in (currentUser)"
-      "suggestPlaceholder": "" // 非必填，命令行中的 suggest 展示规则
+      // 配置在这写
     }
   },
   "scripts": {
