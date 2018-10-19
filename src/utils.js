@@ -17,6 +17,7 @@ const parsePlaceholder = require('./parsePlaceholder')
 const debug = require('debug')('cz-conventional-changelog-befe')
 
 debug('debug enabled!')
+debug('Card.constructor.defaultData %O', Card.constructor.defaultData)
 
 const tableConfig = {
   chars: {
