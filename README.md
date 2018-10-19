@@ -91,7 +91,7 @@ npm install commitizen \
     },
     "@baidu/cz-conventional-changelog-befe": {
       "iql": "",  // 非必填，高级搜索的字段，默认值为 "负责人 in (currentUser)"
-      "suggestPlaceholder": "" // 非必填，命令行中的 suggest 展示规则，默认值 "#{sequence} [{type?align=center}] ({status?align=center}) {title?link}  {responsiblePeople?w=20}"
+      "suggestPlaceholder": "" // 非必填，命令行中的 suggest 展示规则
     }
   },
   "scripts": {
@@ -138,6 +138,20 @@ npm install commitizen \
 | `w`     | 该字段的最大宽度大小，超出用 '...' 结尾，如 `30%` 或者 `100`                                                             | `number|string`                     |
 | `align` | 该字段的水平对齐规则                                                                                                     | `'left'` OR `'right'` OR `'center'` |
 
+#### `isDesc`
+
+是否降序
+
+- Type: `boolean`
+- Default: `false`
+
+#### `order`
+
+按照什么排序，详细情况 icafe 支持字段
+
+- Type: `string`
+- Default: `'createTime'`
+
 ### `icafe-api` 参数配置
 
 根据 [icafe-api](http://gitlab.baidu.com/be-fe/icafe-api#%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81%E7%AD%89%E9%BB%98%E8%AE%A4%E5%8F%82%E6%95%B0) 的参数获取规则，
@@ -151,6 +165,16 @@ npm install commitizen \
 `username` 则在项目目录下设置 `git config user.name "Your Name Here"`，一般 icode 推荐的 clone repo 方式会自动注入用户名至 git 配置
 
 之后通过 `git config --local user.name` 查看是否已经配置用户名在当前 git 目录
+
+## Debug
+
+```bash
+# 只调试 cz
+DEBUG=cz-conventional-changelog-befe git cz
+
+# icafe-api 调试也开启
+DEBUG=cz-conventional-changelog-befe,icafe-api* git cz
+```
 
 ## Example
 

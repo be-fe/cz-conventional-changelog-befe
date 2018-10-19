@@ -13,8 +13,10 @@ const cliWidth = require('cli-width')
 const sliceInput = require('@moyuyc/inquirer-autocomplete-prompt/slice-input')
 const terminalLink = require('terminal-link')
 const stripAnsi = require('strip-ansi')
-
 const parsePlaceholder = require('./parsePlaceholder')
+const debug = require('debug')('cz-conventional-changelog-befe')
+
+debug('debug enabled!')
 
 const tableConfig = {
   chars: {
@@ -223,6 +225,9 @@ function suggestIcafeIssues(
       },
       restData
     )
+
+    debug('请求数据：%O', data)
+
     return memoizedFetch(data)
       .then(res => {
         if (res.body.code !== 200) {
@@ -344,6 +349,7 @@ function suggestIcafeIssues(
       .catch(err => {
         // 去除已经存储的 fetch
         memoizedFetch = generateFetch()
+        debug(err)
         throw err
       })
   }
