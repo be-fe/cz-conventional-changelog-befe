@@ -150,6 +150,8 @@ npm install commitizen \
 
 `username` 则在项目目录下设置 `git config user.name "Your Name Here"`，一般 icode 推荐的 clone repo 方式会自动注入用户名至 git 配置
 
+之后通过 `git config --local user.name` 查看是否已经配置用户名在当前 git 目录
+
 ## Example
 
 ```bash
