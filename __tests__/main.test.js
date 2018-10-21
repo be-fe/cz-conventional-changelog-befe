@@ -9,19 +9,22 @@ const nps = require('path')
 const inquirer = require('inquirer')
 const _engine = require('../src/engine')
 const utils = require('../src/utils')
-const { __setAnswers } = require('inquirer-store')
-
+const inqStore = require('inquirer-store')
 const getCommitlintTypes = require('@baidu/conventional-commit-types-befe')
-let packageJson = utils.getPackageJsonConfigs()
-let types = getCommitlintTypes(packageJson.lang)
+
+const { __setAnswers } = inqStore
 
 function engine(opt = {}) {
+  let packageJson = utils.getPackageJsonConfigs(opt.cwd)
+  let types = getCommitlintTypes(packageJson.lang)
+
   return _engine(
     Object.assign(
       {
         language: packageJson.lang,
         typeObjects: types.typeObjects,
-        typeKeys: types.typeKeys
+        typeKeys: types.typeKeys,
+        pkg: packageJson
       },
       opt
     )
@@ -130,6 +133,85 @@ BREAKING CHANGE: breaking"
     }).prompter(inquirer, msg => {
       expect(msg).toMatchInlineSnapshot(`"feat(abc): subject"`)
       done()
+    })
+  })
+
+  describe('scopes', () => {
+    beforeEach(() => {
+      inqStore.mockClear()
+    })
+
+    it('should scopes-no-suggestOnly', function() {
+      engine({
+        cwd: nps.join(__dirname, 'fixture/scopes/scopes-no-suggestOnly')
+      }).prompter(inquirer.prompt)
+      expect(inqStore.mock.calls.length).toEqual(1)
+      expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
+        .toMatchInlineSnapshot(`
+Object {
+  "message": "表示此更改的范围（location，browser，compile等）：",
+  "name": "scope",
+  "source": [Function],
+  "suggestOnly": false,
+  "type": "auto-complete",
+}
+`)
+    })
+
+    it('should scopes-suggestOnly', function() {
+      engine({
+        cwd: nps.join(__dirname, 'fixture/scopes/scopes-suggestOnly')
+      }).prompter(inquirer.prompt)
+
+      const obj = inqStore.mock.calls[0][1].find(x => x.name === 'scope')
+      expect(inqStore.mock.calls.length).toEqual(1)
+      expect(obj).toMatchInlineSnapshot(`
+Object {
+  "message": "表示此更改的范围（location，browser，compile等）：",
+  "name": "scope",
+  "source": [Function],
+  "suggestOnly": true,
+  "type": "auto-complete",
+}
+`)
+
+      expect(Promise.resolve(obj.source({}, 'abc'))).resolves
+        .toMatchInlineSnapshot(`
+Array [
+  "abc",
+  "abcddd",
+]
+`)
+    })
+
+    it('should scopes-source', function() {
+      engine({
+        cwd: nps.join(__dirname, 'fixture/scopes/scopes-suggestOnly')
+      }).prompter(inquirer.prompt)
+
+      const obj = inqStore.mock.calls[0][1].find(x => x.name === 'scope')
+      expect(Promise.resolve(obj.source({}, 'abc'))).resolves.toEqual([
+        'abc',
+        'abcddd'
+      ])
+      expect(Promise.resolve(obj.source({}, 'value'))).resolves.toEqual([
+        { name: 'name', value: 'value' }
+      ])
+    })
+
+    it('should scopes-noscopes', function() {
+      engine({
+        cwd: nps.join(__dirname, 'fixture/scopes/noscopes')
+      }).prompter(inquirer.prompt)
+      expect(inqStore.mock.calls.length).toEqual(1)
+      expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
+        .toMatchInlineSnapshot(`
+Object {
+  "message": "表示此更改的范围（location，browser，compile等）：",
+  "name": "scope",
+  "type": "input",
+}
+`)
     })
   })
 })

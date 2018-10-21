@@ -44,6 +44,7 @@
     "inquirer-store": "^1.1.1",
     "is-primitive": "^3.0.1",
     "loader-utils": "^1.1.0",
+    "lodash.omit": "^4.5.0",
     "memoize-one": "^4.0.2",
     "minimist": "^1.2.0",
     "please-upgrade-node": "^3.1.1",
@@ -80,7 +81,14 @@
     "commitizen": {
       "path": "./lib/index"
     },
-    "@baidu/cz-conventional-changelog-befe": {}
+    "@baidu/cz-conventional-changelog-befe": {
+      "scopes": [
+        "yes",
+        "noop",
+        {"name": "name", "value": "ok"}
+      ],
+      "scopeSuggestOnly": true
+    }
   },
   "babel": {
     "presets": [

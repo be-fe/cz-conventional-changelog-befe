@@ -151,6 +151,26 @@ npm install commitizen \
 - Type: `string`
 - Default: `'createTime'`
 
+#### `scopes`
+
+自定义 scopes，如果需要自定义项目的可选 scopes，使用该字段
+
+- Type: `Array`
+- Default: `null`
+- Examples
+
+```javascript
+// name：表示显示值；value：表示输出值
+;['编辑页面', '保存页面', { name: '无', value: '' }]
+```
+
+#### `scopeSuggestOnly`
+
+对应自定义 scope，是否只是自动补全交互。“是”表示允许用户随意输入 scope，否则只能在 `scopes` 中选择固定 scope
+
+- Type: `boolean`
+- Default: `false`
+
 ### `icafe-api` 参数配置
 
 根据 [icafe-api](http://gitlab.baidu.com/be-fe/icafe-api#%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81%E7%AD%89%E9%BB%98%E8%AE%A4%E5%8F%82%E6%95%B0) 的参数获取规则，

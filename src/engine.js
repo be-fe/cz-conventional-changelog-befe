@@ -5,6 +5,8 @@ const fuzzy = require('fuzzy')
 const autoComplete = require('@moyuyc/inquirer-autocomplete-prompt')
 const nps = require('path')
 const minimist = require('minimist')
+const omit = require('lodash.omit')
+
 const name = require('../package').name
 
 const utils = require('./utils')
@@ -49,8 +51,14 @@ module.exports = function(options) {
   )
   const gitRootPath = utils.getGitRootPath()
   const rcConfig = config ? config[name] : {}
-  const icafe = Object.assign({}, options.icafe, rcConfig)
-  const prefix = icafe ? icafe.spaceId : null
+  const mergedConfig = Object.assign(
+    { scopeSuggestOnly: false },
+    options.icafe,
+    rcConfig
+  )
+  const prefix = config ? config.spaceId : null
+
+  const icafe = omit(mergedConfig, ['scopes', 'scopeSuggestOnly'])
 
   function makeSuggest({ always = false, suggestTitle } = {}) {
     return function suggestIcafeIssues(anw, input, rl) {
@@ -97,6 +105,25 @@ module.exports = function(options) {
         key: gitRootPath
       })
 
+      let scopeProps = { type: 'input' }
+      if (Array.isArray(mergedConfig.scopes) && mergedConfig.scopes.length) {
+        scopeProps.type = 'auto-complete'
+        scopeProps.suggestOnly = mergedConfig.scopeSuggestOnly
+        scopeProps.source = (answers, input) => {
+          return fuzzy
+            .filter(input || '', mergedConfig.scopes, {
+              extract: function(el) {
+                return typeof el === 'string'
+                  ? el
+                  : el.value + (' ' + el.name || '')
+              }
+            })
+            .map(x => {
+              return x.original
+            })
+        }
+      }
+
       function prompt() {
         return inquirerStore(
           cz.prompt,
@@ -120,9 +147,9 @@ module.exports = function(options) {
               }
             },
             {
-              type: 'input',
               name: 'scope',
-              message: i18n('scope.hint')
+              message: i18n('scope.hint'),
+              ...scopeProps
             },
             {
               type: type,
@@ -198,15 +225,15 @@ module.exports = function(options) {
           }
 
           // parentheses are only needed when a scope is present
-          let scope = answers.scope.trim()
+          let scope = (answers.scope || '').trim()
           scope = scope ? '(' + answers.scope.trim() + ')' : ''
 
           // Hard limit this line
           const head = (
-            answers.type +
+            (answers.type || '') +
             scope +
             ': ' +
-            answers.subject.trim()
+            (answers.subject || '').trim()
           ).slice(0, maxLineWidth)
 
           // Wrap these lines at 100 characters
@@ -232,9 +259,11 @@ module.exports = function(options) {
               if (footer) {
                 message += '\n\n' + footer
               }
-              commit(message, {
-                args: process.argv.slice(2)
-              })
+
+              typeof commit === 'function' &&
+                commit(message, {
+                  args: process.argv.slice(2)
+                })
             })
         })
         .catch(console.error)

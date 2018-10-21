@@ -8,14 +8,8 @@ const store = require.requireActual('inquirer-store')
 
 let answers = {}
 
-module.exports = Object.assign(
-  function inquirerStore(prompt, config) {
-    return Promise.resolve(answers)
-  },
-  store,
-  {
-    __setAnswers(data = {}) {
-      answers = data
-    }
+module.exports = Object.assign(jest.fn(() => Promise.resolve(answers)), store, {
+  __setAnswers(data = {}) {
+    answers = data
   }
-)
+})

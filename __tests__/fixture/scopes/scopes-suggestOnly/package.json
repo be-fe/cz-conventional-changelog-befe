@@ -1,0 +1,15 @@
+{
+  "config": {
+    "@baidu/cz-conventional-changelog-befe": {
+      "scopes": [
+        "abc",
+        "abcddd",
+        {
+          "name": "name",
+          "value": "value"
+        }
+      ],
+      "scopeSuggestOnly": true
+    }
+  }
+}
