@@ -78,14 +78,12 @@
     "rimraf": "^2.6.2"
   },
   "lang": "zh",
-  "icafe": {
-    "spaceId": "befe-erp"
-  },
   "config": {
     "commitizen": {
       "path": "./lib/index"
     },
     "@baidu/cz-conventional-changelog-befe": {
+      "spaceId": "befe-erp",
       "scopes": [
         "yes",
         "noop",
