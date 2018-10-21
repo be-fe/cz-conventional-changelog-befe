@@ -1,3 +1,5 @@
+## [1.7.6](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.5...v1.7.6) (2018-10-21)
+
 ## [1.7.5](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.4...v1.7.5) (2018-10-21)
 
 ### 新特性
