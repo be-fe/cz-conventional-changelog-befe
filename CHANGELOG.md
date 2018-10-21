@@ -1,3 +1,9 @@
+## [1.7.5](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.4...v1.7.5) (2018-10-21)
+
+### 新特性
+
+- 支持自定义 scopes ([af9599e](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/af9599e)), 关闭 [#2](http://newicafe.baidu.com/issue/befe-erp-2/show)
+
 ## [1.7.4](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.3...v1.7.4) (2018-10-19)
 
 ### 修复
