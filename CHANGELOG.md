@@ -1,3 +1,9 @@
+## [1.7.8](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.7...v1.7.8) (2018-10-23)
+
+### 回滚
+
+- chore: add deprecated \([265d781](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/265d781))
+
 ## [1.7.7](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.6...v1.7.7) (2018-10-23)
 
 ## [1.7.6](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.5...v1.7.6) (2018-10-21)
