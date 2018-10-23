@@ -1,4 +1,6 @@
-# @baidu/cz-conventional-changelog-befe
+# cz-conventional-changelog-befe
+
+## 迁移至 [GitHub](https://github.com/be-fe/cz-conventional-changelog-befe)
 
 cz-conventional-changelog-befe 是为 BEFE 团队定制的 [commitizen 适配器](https://github.com/commitizen/cz-cli#adapters).
 
@@ -25,7 +27,7 @@ cz-conventional-changelog-befe 是为 BEFE 团队定制的 [commitizen 适配器
 
 ### 主要区别
 
-- types: 是 BEFE 团队定制的 types from [@baidu/conventional-commit-types-befe](http://gitlab.baidu.com/be-fe/conventional-commit-types-befe)
+- types: 是 BEFE 团队定制的 types from [conventional-commit-types-befe](http://gitlab.baidu.com/be-fe/conventional-commit-types-befe)
 - issues: 提示输入 icafe card ID, 会自动补全前缀
 - 简要描述和关联卡片输入框 支持 icafe suggest  
   (如输入 '#{关键字(可以是 id 或者 title 等等)}' 或者 带有明确 icafe spaceId，如 'icafe-api-{关键字}')
@@ -63,9 +65,7 @@ fix hcm-123,hcm-234,hcm-345
 ## 安装
 
 ```bash
-npm install commitizen \
-  @baidu/cz-conventional-changelog-befe \
-  -D --registry=http://registry.npm.baidu-int.com
+npm install commitizen cz-conventional-changelog-befe
 ```
 
 同时推荐 `npm install -g commitizen`
@@ -87,9 +87,9 @@ npm install commitizen \
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/@baidu/cz-conventional-changelog-befe"
+      "path": "./node_modules/cz-conventional-changelog-befe"
     },
-    "@baidu/cz-conventional-changelog-befe": {
+    "cz-conventional-changelog-befe": {
       // 配置在这写
     }
   },

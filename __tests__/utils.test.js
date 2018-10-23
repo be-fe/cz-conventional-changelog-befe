@@ -6,219 +6,219 @@
  */
 let util = require('../src/utils')
 let nps = require('path')
-let { __setFetch } = require('@baidu/icafe-api')
+let { __setFetch } = require('icafe-api')
 
-jest.mock('@baidu/icafe-api')
+jest.mock('icafe-api')
 
 const data = {
   sequence: 4099,
   title: '候选人中心&#034;offer三方&#034;模块增加三方的联系信息',
   status: 'PM功能验收',
-  id: '66262323',
+  id: '',
   projectName: '',
   type: {
-    localId: 5010,
+    localid: '',
     name: '任务'
   },
   createdUser: {
-    id: 121560,
-    email: 'zhangtingting05@baidu.com',
+    id: '',
+    email: 'zhangtingting05@163.com',
     name: '张婷婷',
     username: 'zhangtingting05'
   },
   createdTime: '2018-09-27 15:16:06',
   responsiblePeople: [
     {
-      id: 314343,
-      email: 'v_siqiangguo@baidu.com',
+      id: '',
+      email: 'v_siqiangguo@163.com',
       name: 'v_siqiangguo',
       username: 'v_siqiangguo'
     },
     {
-      id: 291728,
-      email: 'yucong02@baidu.com',
+      id: '',
+      email: 'yucong02@163.com',
       name: '余聪',
       username: 'yucong02'
     }
   ],
   lastModifiedUser: {
-    id: 291728,
-    email: 'yucong02@baidu.com',
+    id: '',
+    email: 'yucong02@163.com',
     name: '余聪',
     username: 'yucong02'
   },
   lastModifiedTime: '2018-09-28 11:30:46',
   properties: [
     {
-      localId: 45788,
+      localid: '',
       propertyName: '所属计划',
       value: '99471',
       displayValue: '上线后优化/2018.9.28'
     },
     {
-      localId: 22797,
+      localid: '',
       propertyName: '优先级',
       value: '',
       displayValue: ''
     },
     {
-      localId: 20008,
+      localid: '',
       propertyName: '估算工时',
       value: '',
       displayValue: ''
     },
     {
-      localId: 22088,
+      localid: '',
       propertyName: '故事点',
       value: '',
       displayValue: ''
     },
     {
-      localId: 22439,
+      localid: '',
       propertyName: 'RD截止时间',
       value: '',
       displayValue: ''
     },
     {
-      localId: 86892,
+      localid: '',
       propertyName: 'FE负责人',
       value: '',
       displayValue: ''
     },
     {
-      localId: 23879,
+      localid: '',
       propertyName: 'QA负责人',
       value: '',
       displayValue: ''
     },
     {
-      localId: 23880,
+      localid: '',
       propertyName: 'RD负责人',
       value: '',
       displayValue: ''
     },
     {
-      localId: 86893,
+      localid: '',
       propertyName: 'FE进度',
       value: '',
       displayValue: ''
     },
     {
-      localId: 86895,
+      localid: '',
       propertyName: 'FE截止时间',
       value: '',
       displayValue: ''
     },
     {
-      localId: 86896,
+      localid: '',
       propertyName: 'RD进度',
       value: '',
       displayValue: ''
     },
     {
-      localId: 100156,
+      localid: '',
       propertyName: '上线日期',
       value: '',
       displayValue: ''
     },
     {
-      localId: 93970,
+      localid: '',
       propertyName: '所属模块',
       value: '',
       displayValue: ''
     },
     {
-      localId: 22796,
+      localid: '',
       propertyName: '严重级别',
       value: '',
       displayValue: ''
     },
     {
-      localId: 86417,
+      localid: '',
       propertyName: '发现版本',
       value: '',
       displayValue: ''
     },
     {
-      localId: 86418,
+      localid: '',
       propertyName: '修复版本',
       value: '',
       displayValue: ''
     },
     {
-      localId: 22990,
+      localid: '',
       propertyName: 'Resolution',
       value: '',
       displayValue: ''
     },
     {
-      localId: 86419,
+      localid: '',
       propertyName: '标签',
       value: '',
       displayValue: ''
     },
     {
-      localId: 21666,
+      localid: '',
       propertyName: 'Tag',
       value: '',
       displayValue: ''
     },
     {
-      localId: 21996,
+      localid: '',
       propertyName: '模块',
       value: '',
       displayValue: ''
     },
     {
-      localId: 21998,
+      localid: '',
       propertyName: 'Build Version',
       value: '',
       displayValue: ''
     },
     {
-      localId: 21997,
+      localid: '',
       propertyName: 'Fix Version',
       value: '',
       displayValue: ''
     },
     {
-      localId: 32564,
+      localid: '',
       propertyName: '迭代',
       value: '',
       displayValue: ''
     },
     {
-      localId: 32058,
+      localid: '',
       propertyName: '是否适合线上监控发现',
       value: '',
       displayValue: ''
     },
     {
-      localId: 32057,
+      localid: '',
       propertyName: '线上监控是否报警',
       value: '',
       displayValue: ''
     },
     {
-      localId: 23881,
+      localid: '',
       propertyName: 'PM负责人',
       value: '',
       displayValue: ''
     },
     {
-      localId: 22800,
+      localid: '',
       propertyName: 'How Found',
       value: '',
       displayValue: ''
     },
     {
-      localId: 22798,
+      localid: '',
       propertyName: 'Bug Quality',
       value: '',
       displayValue: ''
     },
     {
-      localId: 22564,
+      localid: '',
       propertyName: '关注人',
       value: '',
       displayValue: ''
@@ -295,16 +295,17 @@ Array [
 
     it('should utils.suggestIcafeIssues', function(done) {
       __setFetch()
+      const data = {
+        spaceId: 'New-Offer-Onboarding-Project',
+        username: 'yucong02',
+        password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
+        always: true
+      }
       util
         .suggestIcafeIssues(
           '4099候选人模块增加三方的联系信息',
           { cursor: 0 },
-          {
-            spaceId: 'New-Offer-Onboarding-Project',
-            username: 'yucong02',
-            password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
-            always: true
-          }
+          data
         )
         .then(list => {
           expect(list.length).toBe(1)
@@ -320,12 +321,7 @@ Array [
             .suggestIcafeIssues(
               '4099候选人模块增加三方的联系信息',
               { cursor: 0 },
-              {
-                spaceId: 'New-Offer-Onboarding-Project',
-                username: 'yucong02',
-                password: 'VVV1wdOp7KegcLsI1dkFjzdeg==',
-                always: true
-              }
+              Object.assign(data)
             )
             .then(d => {
               // Cached
@@ -387,7 +383,7 @@ Array [
 
   describe('isSuggestEnabled', () => {
     function setup(cwd) {
-      jest.unmock('@baidu/icafe-api')
+      jest.unmock('icafe-api')
       jest.resetModules()
       process.chdir(nps.join(__dirname, 'fixture', cwd))
       util = require('../src/utils')

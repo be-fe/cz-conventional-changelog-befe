@@ -2,8 +2,8 @@ require('../lib/check-node-version')
 
 const i18n = require('./i18n/index')
 const utils = require('./utils')
-const getCommitlintTypes = require('@baidu/conventional-commit-types-befe')
-const { normalizeIcafeByPkg } = require('@baidu/normalize-icafe-pkg')
+const getCommitlintTypes = require('conventional-commit-types-befe')
+const { normalizeIcafeByPkg } = require('normalize-icafe-pkg')
 const engine = require('./engine')
 
 let packageJson = utils.getPackageJsonConfigs()

@@ -1,6 +1,6 @@
 {
   "config": {
-    "@baidu/cz-conventional-changelog-befe": {
+    "cz-conventional-changelog-befe": {
       "scopes": []
     }
   }

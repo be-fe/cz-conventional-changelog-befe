@@ -10,7 +10,7 @@ const inquirer = require('inquirer')
 const _engine = require('../src/engine')
 const utils = require('../src/utils')
 const inqStore = require('inquirer-store')
-const getCommitlintTypes = require('@baidu/conventional-commit-types-befe')
+const getCommitlintTypes = require('conventional-commit-types-befe')
 
 const { __setAnswers } = inqStore
 
@@ -174,6 +174,7 @@ Object {
   "type": "auto-complete",
 }
 `)
+      console.log(obj)
 
       expect(Promise.resolve(obj.source({}, 'abc'))).resolves
         .toMatchInlineSnapshot(`
