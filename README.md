@@ -1,7 +1,5 @@
 # cz-conventional-changelog-befe
 
-## 迁移至 [GitHub](https://github.com/be-fe/cz-conventional-changelog-befe)
-
 cz-conventional-changelog-befe 是为 BEFE 团队定制的 [commitizen 适配器](https://github.com/commitizen/cz-cli#adapters).
 
 可以通过友好交互(问答式)提交符合[规范的 commit message](https://www.conventionalcommits.org/).
