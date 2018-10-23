@@ -1,4 +1,5 @@
-require('../lib/check-node-version')
+require('./check-node-version')
+require('../deprecated')
 
 const i18n = require('./i18n/index')
 const utils = require('./utils')
