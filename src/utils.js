@@ -3,13 +3,9 @@ const findUp = require('find-up')
 const readPkgUp = require('read-pkg-up')
 const tranz = require('tranz').default
 const tranzCommitIcafe = require('tranz-commit-icafe')
-
 const memoize = require('memoize-one')
-
 const Table = require('cli-table3')
-
-
-const parsePlaceholder = require('./parsePlaceholder')
+const isPrimitive = require('is-primitive')
 
 const tableConfig = {
   chars: {
@@ -129,39 +125,13 @@ function isSuggestEnabled() {
   return !!username && !!password
 }
 
-function generateFetch() {
-  return memoize(Card.fetch.bind(Card), shallowequal)
-}
-
-let memoizedFetch = generateFetch()
-
-function htmlDecode(str) {
-  // 一般可以先转换为标准 unicode 格式（有需要就添加：当返回的数据呈现太多\\\u 之类的时）
-  str = str
-    .replace(/\\u/g, '%u')
-    .replace(/&amp;?/g, '&')
-    .replace(/&lt;?/g, '<')
-    .replace(/&gt;?/g, '>')
-    .replace(/&quot;?/g, '"')
-    .replace(/&apos;?/g, "'")
-  // 再对实体符进行转义
-  // 有 x 则表示是16进制，$1 就是匹配是否有 x，$2 就是匹配出的第二个括号捕获到的内容，将 $2 以对
-
-  str = str.replace(/&#(x)?(\w+);/g, function($, $1, $2) {
-    return String.fromCharCode(parseInt($2, $1 ? 16 : 10))
-  })
-
-  return str
-}
-
 module.exports = {
-  getPackageJsonConfigs: getPackageJsonConfigs,
+  getPackageJsonConfigs,
   rightPadTypes,
   getLanguage,
   getGitRootPath,
-  suggestIcafeIssues,
-  parsePlaceholder,
   simplifyData,
   isSuggestEnabled,
-  issuesFormat
+  issuesFormat,
+  newTable
 }

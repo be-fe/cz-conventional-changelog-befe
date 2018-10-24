@@ -4,7 +4,7 @@ module.exports = function(template) {
   return interpolate(template)
 }
 
-function interpolate(template) {
+function interpolate(template = '') {
   const keys = []
   template.replace(/({([^}]+)}|(.+?))/g, function(match, m, key, chars) {
     let data = {}

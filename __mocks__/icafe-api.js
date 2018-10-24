@@ -21235,12 +21235,13 @@ const stub = {
   constructor: {
     defaultData: {}
   },
-  fetch() {
+  fetch: jest.fn(() => {
     return resolved()
-  }
+  })
 }
 
 module.exports = {
+  _stub: stub,
   __setFetch(resolvedFn = defaultResolved) {
     resolved = resolvedFn
   },

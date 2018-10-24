@@ -7,11 +7,12 @@ const nps = require('path')
 const minimist = require('minimist')
 const omit = require('lodash.omit')
 const gitRemoteOriginUrl = require('git-remote-origin-url')
-const { normalizeIcafeByPkg } = require('normalize-icafe-pkg')
 const getCommitLintTypes = require('conventional-commit-types-befe')
+const { parse } = require('url')
 
 const { name } = require('../package')
 const utils = require('./utils')
+const makeSuggest = require('./makeSuggest')
 const i = require('./i18n')
 const i18n = i.i18n
 
@@ -44,8 +45,13 @@ removeArgv(['--read', '--retry'])
 // This can be any kind of SystemJS compatible module.
 // We use Commonjs here, but ES6 or AMD would do just
 // fine.
-module.exports = function({ pkg } = {}) {
+module.exports = async function({
+  pkg,
+  gitRemoteUrl,
+  suggestAdaptors = require('./suggest-adaptor')
+} = {}) {
   pkg.lang = pkg.lang || 'zh'
+  gitRemoteUrl = gitRemoteUrl || (await gitRemoteOriginUrl())
 
   i18n.setLanguage(utils.getLanguage(pkg.lang))
   const types = getCommitLintTypes(pkg.lang)
@@ -56,38 +62,41 @@ module.exports = function({ pkg } = {}) {
     pkg.lang
   )
   const gitRootPath = utils.getGitRootPath()
-  const rcConfig = config ? config[name] : {}
-  const mergedConfig = Object.assign(
-    { scopeSuggestOnly: false },
-    options.icafe,
-    rcConfig
-  )
-  const prefix = config ? config.spaceId : null
 
-  const icafe = omit(mergedConfig, ['scopes', 'scopeSuggestOnly'])
-
-  function makeSuggest({ always = false, suggestTitle } = {}) {
-    return function suggestIcafeIssues(anw, input, rl) {
-      return utils.suggestIcafeIssues(
-        input,
-        rl,
-        Object.assign({}, icafe || {}, { always, suggestTitle })
-      )
-    }
-  }
+  let config = pkg.config ? pkg.config[name] : {}
+  config = Object.assign({ scopeSuggestOnly: false }, config)
 
   return {
     prompter: function(cz, commit) {
-      gitRemoteOriginUrl().then(remoteUrl => {})
+      const adaptorConfig = omit(config, ['scopes', 'scopeSuggestOnly'])
 
-      const isSuggestEnabled = utils.isSuggestEnabled()
-      if (!isSuggestEnabled) {
+      suggestAdaptors = suggestAdaptors.map(Class => {
+        new Class(adaptorConfig, pkg)
+      })
+
+      const gitUrlParsed = parse(gitRemoteUrl)
+      const enabledSuggest = suggestAdaptors.find(adaptor =>
+        adaptor.isEnabled({ gitUrlParsed })
+      )
+
+      function makeSuggestLocal(options) {
+        if (!enabledSuggest) {
+          return null
+        }
+
+        const suggest = makeSuggest(enabledSuggest, options)
+        return (answers, input, rl) => suggest(input, rl)
+      }
+
+      if (enabledSuggest) {
+        console.warn(i18n('succ.suggest-enabled', enabledSuggest.name))
+      } else {
         console.warn(i18n('warn.suggest-disabled'))
       }
 
       console.log(i18n('first.hint'))
 
-      const type = isSuggestEnabled ? 'auto-complete' : 'input'
+      const type = enabledSuggest ? 'auto-complete' : 'input'
       cz.registerPrompt('auto-complete', autoComplete)
       const store = new FileStore({
         storePath: nps.join(__dirname, '../inquirer-cache.json'),
@@ -95,12 +104,12 @@ module.exports = function({ pkg } = {}) {
       })
 
       let scopeProps = { type: 'input' }
-      if (Array.isArray(mergedConfig.scopes) && mergedConfig.scopes.length) {
+      if (Array.isArray(config.scopes) && config.scopes.length) {
         scopeProps.type = 'auto-complete'
-        scopeProps.suggestOnly = mergedConfig.scopeSuggestOnly
+        scopeProps.suggestOnly = config.scopeSuggestOnly
         scopeProps.source = (answers, input) => {
           return fuzzy
-            .filter(input || '', mergedConfig.scopes, {
+            .filter(input || '', config.scopes, {
               extract: function(el) {
                 return typeof el === 'string'
                   ? el
@@ -119,8 +128,6 @@ module.exports = function({ pkg } = {}) {
           [
             {
               type: 'auto-complete',
-              // searchText: null,
-              // noResultText: null,
               name: 'type',
               message: i18n('feat.hint'),
               source: (answers, input) => {
@@ -145,7 +152,7 @@ module.exports = function({ pkg } = {}) {
               noResultText: null,
               suggestOnly: true,
               name: 'subject',
-              source: makeSuggest({ suggestTitle: true }),
+              source: makeSuggestLocal({ suggestTitle: true }),
               validate: input => {
                 if (!input) {
                   return i18n('subject.error')
@@ -155,11 +162,6 @@ module.exports = function({ pkg } = {}) {
               message: i18n('subject.hint')
             },
             {
-              // bug: 在 cli 包含重复行，如果 type 为 auto-complete
-              // type: 'auto-complete',
-              // noResultText: null,
-              // suggestOnly: true,
-              // source: makeSuggest(),
               type: 'input',
               name: 'body',
               message: i18n('body.hint')
@@ -191,7 +193,7 @@ module.exports = function({ pkg } = {}) {
               suggestOnly: true,
               noResultText: null,
               name: 'issues',
-              source: makeSuggest({ always: true }),
+              source: makeSuggestLocal({ always: true }),
               message: i18n('issues.hint')
             }
           ],
