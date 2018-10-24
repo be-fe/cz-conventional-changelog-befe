@@ -19,10 +19,6 @@
     "prepublishOnly": "npm test",
     "changelog": "conventional-changelog -p befe -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
   },
-  "repository": {
-    "type": "git",
-    "url": "ssh://g@gitlab.baidu.com:8022/be-fe/cz-conventional-changelog-befe.git"
-  },
   "keywords": [
     "git-cz",
     "conventional-changelog",
@@ -126,5 +122,16 @@
     "testMatch": [
       "**/__test{s,}__/*.(spec|test).{t,j}s{x,}"
     ]
-  }
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/be-fe/cz-conventional-changelog-befe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/be-fe/cz-conventional-changelog-befe/issues"
+  },
+  "homepage": "https://github.com/be-fe/cz-conventional-changelog-befe#readme"
 }

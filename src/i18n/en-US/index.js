@@ -21,6 +21,6 @@ module.exports = {
   'subject.error': "Please write some short description here, it's required",
   'warn.suggest-disabled':
     chalk.redBright('Warning：icafe suggest is disabled，please see ') +
-    chalk.cyan('http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe') +
+    chalk.cyan('https://bit.ly/2JdTSQT') +
     chalk.redBright(' for more information.')
 }

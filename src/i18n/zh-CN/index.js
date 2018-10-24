@@ -17,5 +17,5 @@ module.exports = {
   'subject.error': '请书写简短的描述，该项必填',
   'warn.suggest-disabled':
     chalk.redBright('警告：icafe 提示功能未开启，详情请查看 ') +
-    chalk.cyan('http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe')
+    chalk.cyan('https://bit.ly/2JdTSQT')
 }
