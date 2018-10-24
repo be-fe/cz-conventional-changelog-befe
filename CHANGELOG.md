@@ -1,115 +1,117 @@
-## [1.7.8](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.7...v1.7.8) (2018-10-23)
+## [1.7.9](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.8...v1.7.9) (2018-10-24)
+
+## [1.7.8](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.7...v1.7.8) (2018-10-23)
 
 ### 回滚
 
-- chore: add deprecated \([265d781](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/265d781))
+- chore: add deprecated \([265d781](https://github.com/be-fe/cz-conventional-changelog-befe/commit/265d781))
 
-## [1.7.7](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.6...v1.7.7) (2018-10-23)
+## [1.7.7](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.6...v1.7.7) (2018-10-23)
 
-## [1.7.6](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.5...v1.7.6) (2018-10-21)
+## [1.7.6](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.5...v1.7.6) (2018-10-21)
 
-## [1.7.5](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.4...v1.7.5) (2018-10-21)
-
-### 新特性
-
-- 支持自定义 scopes \([af9599e](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/af9599e)), 关闭 [#2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/issues/2)
-
-## [1.7.4](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.3...v1.7.4) (2018-10-19)
-
-### 修复
-
-- 加上 tableline 不存在情况下的，显示 fallback \([3532c00](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/3532c00))
-
-## [1.7.3](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.2...v1.7.3) (2018-10-19)
-
-## [1.7.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.1...v1.7.2) (2018-10-19)
+## [1.7.5](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.4...v1.7.5) (2018-10-21)
 
 ### 新特性
 
-- **debug:** 支持 debug 模式 \([714ef4b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/714ef4b))
+- 支持自定义 scopes \([af9599e](https://github.com/be-fe/cz-conventional-changelog-befe/commit/af9599e)), 关闭 [#2](https://github.com/be-fe/cz-conventional-changelog-befe/issues/2)
 
-## [1.7.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.0...v1.7.1) (2018-10-17)
-
-### 修复
-
-- 修复 fetch 出错情况下的缓存 \([ea08845](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/ea08845))
-
-# [1.7.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.6.1...v1.7.0) (2018-10-17)
+## [1.7.4](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.3...v1.7.4) (2018-10-19)
 
 ### 修复
 
-- **suggestPlaceholder:** 调整规则 \([4d0320e](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/4d0320e))
+- 加上 tableline 不存在情况下的，显示 fallback \([3532c00](https://github.com/be-fe/cz-conventional-changelog-befe/commit/3532c00))
 
-## [1.6.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.6.0...v1.6.1) (2018-10-17)
+## [1.7.3](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.2...v1.7.3) (2018-10-19)
 
-# [1.6.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.5.0...v1.6.0) (2018-10-16)
-
-# [1.5.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.4.0...v1.5.0) (2018-10-16)
+## [1.7.2](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.1...v1.7.2) (2018-10-19)
 
 ### 新特性
 
-- **suggest:** subject 支持 提示 icafe 卡片标题 \([8f6a7fe](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/8f6a7fe))
+- **debug:** 支持 debug 模式 \([714ef4b](https://github.com/be-fe/cz-conventional-changelog-befe/commit/714ef4b))
 
-# [1.4.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.2...v1.4.0) (2018-10-15)
+## [1.7.1](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.0...v1.7.1) (2018-10-17)
+
+### 修复
+
+- 修复 fetch 出错情况下的缓存 \([ea08845](https://github.com/be-fe/cz-conventional-changelog-befe/commit/ea08845))
+
+# [1.7.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.6.1...v1.7.0) (2018-10-17)
+
+### 修复
+
+- **suggestPlaceholder:** 调整规则 \([4d0320e](https://github.com/be-fe/cz-conventional-changelog-befe/commit/4d0320e))
+
+## [1.6.1](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.6.0...v1.6.1) (2018-10-17)
+
+# [1.6.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.5.0...v1.6.0) (2018-10-16)
+
+# [1.5.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.4.0...v1.5.0) (2018-10-16)
 
 ### 新特性
 
-- support detect icafe-suggest enabled \([f90b30c](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/f90b30c))
+- **suggest:** subject 支持 提示 icafe 卡片标题 \([8f6a7fe](https://github.com/be-fe/cz-conventional-changelog-befe/commit/8f6a7fe))
 
-## [1.3.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.1...v1.3.2) (2018-10-15)
-
-### 修复
-
-- move inquirer as dep \([53bfc8e](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/53bfc8e))
-
-## [1.3.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.0...v1.3.1) (2018-10-15)
-
-### 修复
-
-- catch error \([0ff3c6b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/0ff3c6b))
-
-# [1.3.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.2...v1.3.0) (2018-10-15)
+# [1.4.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.2...v1.4.0) (2018-10-15)
 
 ### 新特性
 
-- 支持 align 参数 \([bfdad5b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/bfdad5b))
+- support detect icafe-suggest enabled \([f90b30c](https://github.com/be-fe/cz-conventional-changelog-befe/commit/f90b30c))
 
-## [1.2.2](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.1...v1.2.2) (2018-10-13)
+## [1.3.2](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.1...v1.3.2) (2018-10-15)
 
 ### 修复
 
-- --retry \([cc4000b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/cc4000b))
+- move inquirer as dep \([53bfc8e](https://github.com/be-fe/cz-conventional-changelog-befe/commit/53bfc8e))
 
-## [1.2.1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.0...v1.2.1) (2018-10-13)
+## [1.3.1](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.3.0...v1.3.1) (2018-10-15)
+
+### 修复
+
+- catch error \([0ff3c6b](https://github.com/be-fe/cz-conventional-changelog-befe/commit/0ff3c6b))
+
+# [1.3.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.2...v1.3.0) (2018-10-15)
 
 ### 新特性
 
-- add check-node-version \([db0668b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/db0668b))
+- 支持 align 参数 \([bfdad5b](https://github.com/be-fe/cz-conventional-changelog-befe/commit/bfdad5b))
 
-# [1.2.0](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/compare/9242883...v1.2.0) (2018-10-13)
+## [1.2.2](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.1...v1.2.2) (2018-10-13)
 
 ### 修复
 
-- fix commitlint warning \([62fa100](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/62fa100))
-- fix error when generate changelog \([ef1b38b](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/ef1b38b))
-- fix npm dependences of changelog \([383eac1](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/383eac1))
-- **abc:** lalalalala \([24934d6](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/24934d6))
-- **abc:** lalalalala \([d358525](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/d358525))
-- 对于 `-abc-` 不进行 suggest \([7f43357](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/7f43357))
+- --retry \([cc4000b](https://github.com/be-fe/cz-conventional-changelog-befe/commit/cc4000b))
+
+## [1.2.1](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.2.0...v1.2.1) (2018-10-13)
+
+### 新特性
+
+- add check-node-version \([db0668b](https://github.com/be-fe/cz-conventional-changelog-befe/commit/db0668b))
+
+# [1.2.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/9242883...v1.2.0) (2018-10-13)
+
+### 修复
+
+- fix commitlint warning \([62fa100](https://github.com/be-fe/cz-conventional-changelog-befe/commit/62fa100))
+- fix error when generate changelog \([ef1b38b](https://github.com/be-fe/cz-conventional-changelog-befe/commit/ef1b38b))
+- fix npm dependences of changelog \([383eac1](https://github.com/be-fe/cz-conventional-changelog-befe/commit/383eac1))
+- **abc:** lalalalala \([24934d6](https://github.com/be-fe/cz-conventional-changelog-befe/commit/24934d6))
+- **abc:** lalalalala \([d358525](https://github.com/be-fe/cz-conventional-changelog-befe/commit/d358525))
+- 对于 `-abc-` 不进行 suggest \([7f43357](https://github.com/be-fe/cz-conventional-changelog-befe/commit/7f43357))
 
 ### 性能提升
 
-- check icafe \([426489e](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/426489e))
+- check icafe \([426489e](https://github.com/be-fe/cz-conventional-changelog-befe/commit/426489e))
 
 ### 新特性
 
-- add cz prompter feature completed \([9242883](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/9242883))
-- **okk:** hhhh \([2fa6dbb](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/2fa6dbb))
-- 支持 icafe suggest + --restore-cache \([56172c8](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/56172c8))
+- add cz prompter feature completed \([9242883](https://github.com/be-fe/cz-conventional-changelog-befe/commit/9242883))
+- **okk:** hhhh \([2fa6dbb](https://github.com/be-fe/cz-conventional-changelog-befe/commit/2fa6dbb))
+- 支持 icafe suggest + --restore-cache \([56172c8](https://github.com/be-fe/cz-conventional-changelog-befe/commit/56172c8))
 
 ### 样式
 
-- **sss:** 修复罗干问题 \([b9fa41d](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/commit/b9fa41d)), 关闭 [#123](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/issues/123) [#222](http://gitlab.baidu.com/be-fe/cz-conventional-changelog-befe/issues/222)
+- **sss:** 修复罗干问题 \([b9fa41d](https://github.com/be-fe/cz-conventional-changelog-befe/commit/b9fa41d)), 关闭 [#123](https://github.com/be-fe/cz-conventional-changelog-befe/issues/123) [#222](https://github.com/be-fe/cz-conventional-changelog-befe/issues/222)
 
 ### 突破性变化
 
