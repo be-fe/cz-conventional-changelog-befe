@@ -83,46 +83,65 @@ function getPackageJsonConfigs(cwd) {
   return pkg
 }
 
-function issuesFormat(spaceId, serials) {
-  return tranz(serials, [tranzCommitIcafe({ spaceId, readPkg: false })])
+function issuesFormat(spaceId, message) {
+  return tranz(message, [tranzCommitIcafe({ spaceId, readPkg: false })])
 }
 
 function getVal(val, { keyName = 'name' } = {}) {
   if (val && val.hasOwnProperty && val.hasOwnProperty(keyName)) {
     val = val[keyName]
   }
-  if (typeof val === 'undefined') {
+  if (val == null) {
     val = ''
   }
-  return isPrimitive(val) || (Array.isArray(val) && val.every(isPrimitive))
-    ? val
-    : null
+
+  if (isPrimitive(val) || (Array.isArray(val) && val.every(isPrimitive))) {
+    return val
+  }
+  if (Array.isArray(val)) {
+    val = val.map(v => getVal(v, { keyName }))
+  }
+
+  return val
 }
 
-function simplifyData(data = {}) {
+function simplifyData(
+  data = {},
+  { flattenKeys = [], rollbackKeys = [], defaultKeyName = 'name' } = {}
+) {
+  function find(array, value) {
+    return array.find(x => {
+      if (typeof x === 'string') {
+        return x === value
+      }
+      return x && x.name === value
+    })
+  }
   const newData = {}
   for (let key in data) {
     if (data.hasOwnProperty(key)) {
       let val = data[key]
-      if (['responsiblePeople'].indexOf(key) >= 0 && Array.isArray(val)) {
-        val = val.map(v => getVal(v, { keyName: 'name' }))
+      let tmp
+      if ((tmp = find(flattenKeys, key))) {
+        const keyName = tmp && tmp.valueKey ? tmp.valueKey : defaultKeyName
+        if (Array.isArray(val)) {
+          val = val.map(v => getVal(v, { keyName }))
+        } else {
+          val = getVal(val, { keyName })
+        }
       }
 
-      if ('properties' === key) {
+      if ((tmp = find(rollbackKeys, key))) {
+        const keyName = tmp && tmp.valueKey ? tmp.valueKey : defaultKeyName
         val.forEach(v => {
-          newData[v.propertyName] = getVal(v, { keyName: 'displayValue' })
+          newData[v.propertyName] = getVal(v, { keyName })
         })
       } else {
-        newData[key] = getVal(val)
+        newData[key] = getVal(val, { keyName: defaultKeyName })
       }
     }
   }
   return newData
-}
-
-function isSuggestEnabled() {
-  const { spaceId, username, password } = Card.constructor.defaultData
-  return !!username && !!password
 }
 
 module.exports = {
@@ -130,8 +149,8 @@ module.exports = {
   rightPadTypes,
   getLanguage,
   getGitRootPath,
+  getVal,
   simplifyData,
-  isSuggestEnabled,
   issuesFormat,
   newTable
 }

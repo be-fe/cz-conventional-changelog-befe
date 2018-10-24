@@ -17,12 +17,12 @@ class AdaptorInterface {
    *
    * @param data
    */
-  flattenIncomeData(data) {
+  flattenIncomeData(data, inputData) {
     return {
       title: '',
       issueURL: '',
       issueId: '',
-      issueNo: '',
+      number: '',
       searchText: '',
       ...data
     }
@@ -39,6 +39,9 @@ class AdaptorInterface {
     this.config = config
 
     this.options = { ...(this.config && this.config[this.name]) }
+    this.options.placeholder =
+      this.options.placeholder ||
+      '#{number?link} [{type?align=center}] ({state?align=center}) {title?w=35%}  {assignees?w=10%}'
     this.data = (this.options || {}).data || this.config.data || {}
 
     this.namespace = ''
@@ -51,6 +54,10 @@ class AdaptorInterface {
 
   fetch({ namespace, matching }) {
     return []
+  }
+
+  transformCommitMessage(message) {
+    return message
   }
 }
 

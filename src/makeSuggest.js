@@ -91,7 +91,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
         ...inputData,
         ...groups,
         namespace: groups.namespace || namespace,
-        matching: groups.matching || matching
+        matching: (groups.matching || matching).replace(/\+/g, ' ')
       }
     } else if (suggestTitle) {
       isStartIssue = true
@@ -149,7 +149,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
 
     let choices = list.map(data => {
       // card.title = htmlDecode(card.title)
-      const flattenData = adaptor.flattenIncomeData(data)
+      const flattenData = adaptor.flattenIncomeData(data, inputData)
       const row = []
       parsed.forEach(d => {
         if (d.type === 'data') {
@@ -173,7 +173,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
 
       const leftStr = !isSuggestTitle
         ? input.slice(0, leftIndex) +
-          (flattenData.issueId || `#${flattenData.issueNo}`)
+          (flattenData.issueId || `#${flattenData.number}`)
         : input.slice(0, leftIndex) + flattenData.title
 
       return {
@@ -240,7 +240,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
             data.searchText ||
             [
               data.issueId || '',
-              data.issueNo || '',
+              data.number || '',
               data.title || ''
               // data.type,
               // data.status,

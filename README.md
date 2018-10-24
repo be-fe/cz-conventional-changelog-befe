@@ -125,7 +125,7 @@ npm install commitizen cz-conventional-changelog-befe
 
 ![](http://obu9je6ng.bkt.clouddn.com//1539780509.png?imageMogr2/thumbnail/!100p)
 
-其中支持的数据字段在 [placeholder.data.json](./__tests__/fixture/placeholder.data.json)
+其中支持的数据字段在 [placeholder.data.json](./__tests__/fixture/icode.json)
 
 其中的 `title?link` 表示传参 `link`，支持的传参有：
 

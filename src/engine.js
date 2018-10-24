@@ -53,7 +53,7 @@ module.exports = async function({
   pkg.lang = pkg.lang || 'zh'
   gitRemoteUrl = gitRemoteUrl || (await gitRemoteOriginUrl())
 
-  i18n.setLanguage(utils.getLanguage(pkg.lang))
+  i.setLanguage(utils.getLanguage(pkg.lang))
   const types = getCommitLintTypes(pkg.lang)
 
   const typeChoices = utils.rightPadTypes(
@@ -70,9 +70,9 @@ module.exports = async function({
     prompter: function(cz, commit) {
       const adaptorConfig = omit(config, ['scopes', 'scopeSuggestOnly'])
 
-      suggestAdaptors = suggestAdaptors.map(Class => {
-        new Class(adaptorConfig, pkg)
-      })
+      suggestAdaptors = suggestAdaptors.map(
+        Class => new Class(adaptorConfig, pkg)
+      )
 
       const gitUrlParsed = parse(gitRemoteUrl)
       const enabledSuggest = suggestAdaptors.find(adaptor =>
@@ -237,25 +237,27 @@ module.exports = async function({
             ? 'BREAKING CHANGE: ' + breaking.replace(/^BREAKING CHANGE: /, '')
             : ''
           breaking = wrap(breaking, wrapOptions)
+          let issues = answers.issues || ''
+          issues = issues ? wrap(issues, wrapOptions) : ''
+          const footer = filter([breaking, issues]).join('\n\n')
+          let message = head
+          if (body) {
+            message += '\n\n' + body
+          }
+          if (footer) {
+            message += '\n\n' + footer
+          }
 
-          return utils
-            .issuesFormat(prefix, answers.issues || '')
-            .then(issues => {
-              issues = issues ? wrap(issues, wrapOptions) : ''
-              const footer = filter([breaking, issues]).join('\n\n')
-              let message = head
-              if (body) {
-                message += '\n\n' + body
-              }
-              if (footer) {
-                message += '\n\n' + footer
-              }
+          const transform =
+            (enabledSuggest && enabledSuggest.transformCommitMessage) ||
+            (m => m)
 
-              typeof commit === 'function' &&
-                commit(message, {
-                  args: process.argv.slice(2)
-                })
-            })
+          return Promise.resolve(transform(message)).then(message => {
+            typeof commit === 'function' &&
+              commit(message, {
+                args: process.argv.slice(2)
+              })
+          })
         })
         .catch(console.error)
     }

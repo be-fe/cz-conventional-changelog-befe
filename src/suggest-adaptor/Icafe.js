@@ -11,7 +11,7 @@ const { normalizeIcafeByPkg } = require('normalize-icafe-pkg')
 const debug = require('../debug')
 const memoize = require('../memoize')
 const AdaptorInterface = require('./AdaptorInterface')
-const { simplifyData } = require('../utils')
+const { simplifyData, issuesFormat } = require('../utils')
 
 const { Card } = create()
 
@@ -45,9 +45,6 @@ class Icafe extends AdaptorInterface {
   constructor(config, pkg) {
     super(config, pkg)
     this.pkg.icafe = normalizeIcafeByPkg(pkg)
-    this.options.placeholder =
-      this.options.placeholder ||
-      '#{sequence?link} [{type?align=center}] ({status?align=center}) {title?w=35%}  {responsiblePeople?w=10%}'
     this.data = this.normalizeConfigData({
       spaceId: Card.constructor.defaultData.spaceId,
       username: Card.constructor.defaultData.username,
@@ -70,10 +67,17 @@ class Icafe extends AdaptorInterface {
     return data
   }
 
-  flattenIncomeData(data) {
-    data = simplifyData(data)
+  flattenIncomeData(data, { namespace } = {}) {
+    data = simplifyData(data, {
+      flattenKeys: [{ name: 'responsiblePeople', valueKey: 'name' }],
+      rollbackKeys: [{ name: 'properties', valueKey: 'displayValue' }],
+      defaultKeyName: 'name'
+    })
     return {
-      issueNo: '',
+      assignees: data.responsiblePeople,
+      state: data.status,
+      issueId: namespace ? `${namespace}-${data.sequence}` : null,
+      number: data.sequence,
       ...data,
       title: htmlDecode(data.title)
     }
@@ -102,6 +106,10 @@ class Icafe extends AdaptorInterface {
     }
 
     return body.cards
+  }
+
+  transformCommitMessage(message) {
+    return this.namespace ? issuesFormat(this.namespace, message) : message
   }
 }
 

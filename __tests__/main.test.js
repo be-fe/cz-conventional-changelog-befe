@@ -18,15 +18,17 @@ function engine(opt = {}) {
   let packageJson = utils.getPackageJsonConfigs(opt.cwd)
   let types = getCommitlintTypes(packageJson.lang)
 
-  return _engine(
-    Object.assign(
-      {
-        language: packageJson.lang,
-        typeObjects: types.typeObjects,
-        typeKeys: types.typeKeys,
-        pkg: packageJson
-      },
-      opt
+  return Promise.resolve(
+    _engine(
+      Object.assign(
+        {
+          language: packageJson.lang,
+          typeObjects: types.typeObjects,
+          typeKeys: types.typeKeys,
+          pkg: packageJson
+        },
+        opt
+      )
     )
   )
 }
@@ -52,8 +54,9 @@ describe('main', function() {
       icafe: {
         spaceId: 'abc'
       }
-    }).prompter(inquirer, msg => {
-      expect(msg).toMatchInlineSnapshot(`
+    }).then(({ prompter }) => {
+      prompter(inquirer, msg => {
+        expect(msg).toMatchInlineSnapshot(`
 "feat(abc): subject
 
 body
@@ -62,7 +65,8 @@ BREAKING CHANGE: breaking
 
 issues"
 `)
-      done()
+        done()
+      })
     })
   })
 
@@ -80,16 +84,18 @@ issues"
       icafe: {
         spaceId: 'abc'
       }
-    }).prompter(inquirer, msg => {
-      expect(msg).toMatchInlineSnapshot(`
+    }).then(({ prompter }) =>
+      prompter(inquirer, msg => {
+        expect(msg).toMatchInlineSnapshot(`
 "feat(abc): subject
 
 BREAKING CHANGE: breaking
 
 issues"
 `)
-      done()
-    })
+        done()
+      })
+    )
   })
 
   it('should main without issues', done => {
@@ -106,17 +112,19 @@ issues"
       icafe: {
         spaceId: 'abc'
       }
-    }).prompter(inquirer, msg => {
-      expect(msg).toMatchInlineSnapshot(`
+    }).then(({ prompter }) => {
+      prompter(inquirer, msg => {
+        expect(msg).toMatchInlineSnapshot(`
 "feat(abc): subject
 
 BREAKING CHANGE: breaking"
 `)
-      done()
+        done()
+      })
     })
   })
 
-  it('should main without issues & breaking & body', done => {
+  it('should main without issues & breaking & body', function(done) {
     __setAnswers({
       type: 'feat',
       scope: 'abc',
@@ -130,9 +138,11 @@ BREAKING CHANGE: breaking"
       icafe: {
         spaceId: 'abc'
       }
-    }).prompter(inquirer, msg => {
-      expect(msg).toMatchInlineSnapshot(`"feat(abc): subject"`)
-      done()
+    }).then(({ prompter }) => {
+      prompter(inquirer, msg => {
+        expect(msg).toMatchInlineSnapshot(`"feat(abc): subject"`)
+        done()
+      })
     })
   })
 
@@ -141,10 +151,10 @@ BREAKING CHANGE: breaking"
       inqStore.mockClear()
     })
 
-    it('should scopes-no-suggestOnly', function() {
-      engine({
+    it('should scopes-no-suggestOnly', async function() {
+      ;(await engine({
         cwd: nps.join(__dirname, 'fixture/scopes/scopes-no-suggestOnly')
-      }).prompter(inquirer.prompt)
+      })).prompter(inquirer.prompt)
       expect(inqStore.mock.calls.length).toEqual(1)
       expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
         .toMatchInlineSnapshot(`
@@ -158,10 +168,10 @@ Object {
 `)
     })
 
-    it('should scopes-suggestOnly', function() {
-      engine({
+    it('should scopes-suggestOnly', async function() {
+      ;(await engine({
         cwd: nps.join(__dirname, 'fixture/scopes/scopes-suggestOnly')
-      }).prompter(inquirer.prompt)
+      })).prompter(inquirer.prompt)
 
       const obj = inqStore.mock.calls[0][1].find(x => x.name === 'scope')
       expect(inqStore.mock.calls.length).toEqual(1)
@@ -185,10 +195,10 @@ Array [
 `)
     })
 
-    it('should scopes-source', function() {
-      engine({
+    it('should scopes-source', async function() {
+      ;(await engine({
         cwd: nps.join(__dirname, 'fixture/scopes/scopes-suggestOnly')
-      }).prompter(inquirer.prompt)
+      })).prompter(inquirer.prompt)
 
       const obj = inqStore.mock.calls[0][1].find(x => x.name === 'scope')
       expect(Promise.resolve(obj.source({}, 'abc'))).resolves.toEqual([
@@ -200,10 +210,10 @@ Array [
       ])
     })
 
-    it('should scopes-noscopes', function() {
-      engine({
+    it('should scopes-noscopes', async function() {
+      ;(await engine({
         cwd: nps.join(__dirname, 'fixture/scopes/noscopes')
-      }).prompter(inquirer.prompt)
+      })).prompter(inquirer.prompt)
       expect(inqStore.mock.calls.length).toEqual(1)
       expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
         .toMatchInlineSnapshot(`

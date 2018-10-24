@@ -34,12 +34,18 @@ class Icafe extends AdaptorInterface {
     return data
   }
 
-  flattenIncomeData(data) {
-    data = simplifyData(data)
+  flattenIncomeData(data, { namespace } = {}) {
+    data = simplifyData(data, {
+      flattenKeys: ['user', { name: 'labels', valueKey: 'name' }],
+      defaultKeyName: 'login'
+    })
     return {
-      issueNo: '',
-      ...data,
-      title: htmlDecode(data.title)
+      issueId:
+        namespace && namespace !== this.namespace
+          ? `${namespace}#${data.number}`
+          : null,
+      type: data.pull_request ? 'pr' : 'issue',
+      ...data
     }
   }
 
@@ -54,8 +60,7 @@ class Icafe extends AdaptorInterface {
   memoized = memoize(gh)
 
   async fetch({ namespace, matching }) {
-    let body
-    let data = await this.memoized.fn('search/issues', {
+    let { body } = await this.memoized.fn('search/issues', {
       method: 'get',
       token: this.options.token,
       query: {
@@ -66,13 +71,8 @@ class Icafe extends AdaptorInterface {
         beforeRequest: [data => debug('gh-request: %O', data)]
       }
     })
-    body = data && data.body
 
-    if (!body || !body.cards || body.code !== 200) {
-      return []
-    }
-
-    return body.cards
+    return body && body.items
   }
 }
 
