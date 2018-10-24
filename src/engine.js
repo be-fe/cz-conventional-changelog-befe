@@ -6,9 +6,11 @@ const autoComplete = require('@moyuyc/inquirer-autocomplete-prompt')
 const nps = require('path')
 const minimist = require('minimist')
 const omit = require('lodash.omit')
+const gitRemoteOriginUrl = require('git-remote-origin-url')
+const { normalizeIcafeByPkg } = require('normalize-icafe-pkg')
+const getCommitLintTypes = require('conventional-commit-types-befe')
 
-const name = require('../package').name
-
+const { name } = require('../package')
 const utils = require('./utils')
 const i = require('./i18n')
 const i18n = i.i18n
@@ -42,12 +44,16 @@ removeArgv(['--read', '--retry'])
 // This can be any kind of SystemJS compatible module.
 // We use Commonjs here, but ES6 or AMD would do just
 // fine.
-module.exports = function(options) {
-  const { config } = options.pkg || {}
+module.exports = function({ pkg } = {}) {
+  pkg.lang = pkg.lang || 'zh'
+
+  i18n.setLanguage(utils.getLanguage(pkg.lang))
+  const types = getCommitLintTypes(pkg.lang)
+
   const typeChoices = utils.rightPadTypes(
-    options.typeObjects,
-    options.typeKeys,
-    options.language
+    types.typeObjects,
+    types.typeKeys,
+    pkg.lang
   )
   const gitRootPath = utils.getGitRootPath()
   const rcConfig = config ? config[name] : {}
@@ -71,32 +77,15 @@ module.exports = function(options) {
   }
 
   return {
-    // When a user runs `git cz`, prompter will
-    // be executed. We pass you cz, which currently
-    // is just an instance of inquirer.js. Using
-    // this you can ask questions and get answers.
-    //
-    // The commit callback should be executed when
-    // you're ready to send back a commit template
-    // to git.
-    //
-    // By default, we'll de-indent your commit
-    // template and will keep empty lines.
     prompter: function(cz, commit) {
+      gitRemoteOriginUrl().then(remoteUrl => {})
+
       const isSuggestEnabled = utils.isSuggestEnabled()
       if (!isSuggestEnabled) {
         console.warn(i18n('warn.suggest-disabled'))
       }
 
       console.log(i18n('first.hint'))
-
-      // Let's ask some questions of the user
-      // so that we can populate our commit
-      // template.
-      //
-      // See inquirer.js docs for specifics.
-      // You can also opt to use another input
-      // collection library if you prefer.
 
       const type = isSuggestEnabled ? 'auto-complete' : 'input'
       cz.registerPrompt('auto-complete', autoComplete)
