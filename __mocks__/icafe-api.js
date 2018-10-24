@@ -21244,5 +21244,9 @@ module.exports = {
   __setFetch(resolvedFn = defaultResolved) {
     resolved = resolvedFn
   },
-  Card: stub
+  create() {
+    return {
+      Card: stub
+    }
+  }
 }

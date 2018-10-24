@@ -3,7 +3,7 @@ const findUp = require('find-up')
 const readPkgUp = require('read-pkg-up')
 const tranz = require('tranz').default
 const tranzCommitIcafe = require('tranz-commit-icafe')
-const { Card } = require('icafe-api')
+const { create } = require('icafe-api')
 const shallowequal = require('shallowequal')
 const memoize = require('memoize-one')
 const isPrimitive = require('is-primitive')
@@ -18,6 +18,7 @@ const stringWidth = require('string-width')
 const parsePlaceholder = require('./parsePlaceholder')
 const debug = require('debug')('cz-conventional-changelog-befe')
 
+const { Card } = create()
 debug('debug enabled!')
 debug('Card.constructor.defaultData %O', Card.constructor.defaultData)
 
