@@ -79,7 +79,7 @@ function getLanguage(language) {
 
 // 拿到 package.json 中的配置
 function getPackageJsonConfigs(cwd) {
-  const { pkg = {} } = readPkgUp.sync({ normalize: false, cwd }) || {}
+  const { pkg = {} } = readPkgUp.sync({ normalize: true, cwd }) || {}
   return pkg
 }
 

@@ -108,10 +108,12 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
       return Promise.resolve([])
     }
     let controller = memoize(adaptor.fetch.bind(adaptor))
+    debug('input data：%O', inputData)
     debug('请求数据：%O', adaptor.data)
     let list = []
     try {
       list = await controller.fn.call(adaptor, inputData)
+      debug('响应数据：%O', list)
     } catch (e) {
       debug(e)
       throw e

@@ -6,9 +6,9 @@
  */
 
 const memoizeOne = require('memoize-one')
-const shallowequal = require('shallowequal')
+const iseq = require('lodash.isequal')
 
-const memoize = fn => memoizeOne(fn, shallowequal)
+const memoize = fn => memoizeOne(fn, iseq)
 
 module.exports = function(fn) {
   const update = () => (mfn = memoize(fn))

@@ -4,7 +4,6 @@
  * @date 2018/10/24
  *
  */
-
 const debug = require('debug')('cz-conventional-changelog-befe')
 
 debug('debug enabled!')
