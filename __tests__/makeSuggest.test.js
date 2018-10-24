@@ -512,5 +512,15 @@ describe('makeSuggest', function() {
         }
       ])
     })
+
+    it('should queryStringify', function() {
+      expect(
+        new GitHub().queryStringify({
+          word: ['nihao', 'NOT', 'hello'],
+          a: ['aaaa', 'bbb'],
+          c: ['oooo']
+        })
+      ).toMatchInlineSnapshot(`"nihao NOT hello a:aaaa a:bbb c:oooo"`)
+    })
   })
 })

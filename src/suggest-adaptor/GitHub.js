@@ -6,11 +6,15 @@
  */
 
 const gh = require('gh-got')
+const isPrimitive = require('is-primitive')
+const toArray = require('lodash.toarray')
 
 const debug = require('../debug')
 const memoize = require('../memoize')
 const AdaptorInterface = require('./AdaptorInterface')
 const { simplifyData } = require('../utils')
+
+const omit = require('lodash.omit')
 
 class Icafe extends AdaptorInterface {
   static displayName = 'github'
@@ -59,13 +63,38 @@ class Icafe extends AdaptorInterface {
 
   memoized = memoize(gh)
 
+  queryStringify(query) {
+    let string = ''
+    Object.keys(query).forEach(key => {
+      const val = query[key]
+      let prefix = key + ':'
+      if (key === 'word') {
+        prefix = ''
+      }
+      if (Array.isArray(val)) {
+        string +=
+          val.map(x => (x ? `${prefix}${String(x)}` : '')).join(' ') + ' '
+      } else if (val && isPrimitive(val)) {
+        string += ' ' + String(val)
+      }
+    })
+    return string.trim()
+  }
+
   async fetch({ namespace, matching }) {
+    const query = omit(this.data, ['sort', 'order'])
+    query.word = toArray(query.word || [])
+    query.repo = toArray(query.repo || [])
+    query.word.push(matching)
+    query.repo.push(namespace)
+
     let { body } = await this.memoized.fn('search/issues', {
       method: 'get',
       token: this.options.token,
       query: {
-        q: `${matching}+repo:${namespace}`,
-        ...this.data
+        q: this.queryStringify(query),
+        sort: this.data.sort,
+        order: this.data.order
       },
       hooks: {
         beforeRequest: [data => debug('gh-request: %O', data)]

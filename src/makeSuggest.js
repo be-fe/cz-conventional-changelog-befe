@@ -91,7 +91,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
         ...inputData,
         ...groups,
         namespace: groups.namespace || namespace,
-        matching: (groups.matching || matching).replace(/\+/g, ' ')
+        matching: groups.matching || matching
       }
     } else if (suggestTitle) {
       isStartIssue = true
