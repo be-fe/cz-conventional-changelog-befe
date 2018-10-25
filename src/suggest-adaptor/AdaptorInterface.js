@@ -5,12 +5,14 @@
  *
  */
 
+const parse = require('parse-github-url')
+
 /**
  * @class AdaptorInterface
  */
 class AdaptorInterface {
   get name() {
-    return this.constructor.name
+    return this.constructor.displayName || this.constructor.name
   }
 
   /**
@@ -28,7 +30,7 @@ class AdaptorInterface {
     }
   }
 
-  constructor(config = {}, pkg = {}) {
+  constructor(config = {}, pkg = {}, gitUrl = '') {
     if (typeof this.name !== 'string') {
       throw new TypeError(
         `Adaptor requires \`displayName\` (string) static property, but ${typeof this
@@ -37,18 +39,37 @@ class AdaptorInterface {
     }
     this.pkg = pkg
     this.config = config
+    this.gitUrl = gitUrl
 
-    this.options = { ...(this.config && this.config[this.name]) }
-    this.options.placeholder =
-      this.options.placeholder ||
-      '#{number?link} [{type?align=center}] ({state?align=center}) {title?w=35%}  {assignees?w=10%}'
-    this.data = (this.options || {}).data || this.config.data || {}
+    if (gitUrl) {
+      this.gitUrlObj = parse(gitUrl)
+    } else if (pkg.repository) {
+      const repository =
+        typeof pkg.repository === 'string' ? pkg.repository : pkg.repository.url
+      if (repository) {
+        this.gitUrlObj = parse(repository)
+      }
+    }
+
+    this.options = {
+      placeholder:
+        '{#:number?link} {[:type:]?align=center} {(:state:)?align=center} {title?w=50%}  {assignees}',
+      suggestEnabled: true,
+      ...(this.config && this.config[this.name.toLowerCase()]
+        ? this.config[this.name.toLowerCase()]
+        : this.config)
+    }
+    this.data = (this.options || {}).data || {}
 
     this.namespace = ''
     this.matchRegexps = ['^#(?<matching>.+)$']
   }
 
-  isEnabled({ gitUrlParsed } = {}) {
+  isEnabled() {
+    return this._isEnabled() && this.options.suggestEnabled
+  }
+
+  _isEnabled() {
     return !!this.namespace
   }
 

@@ -93,6 +93,30 @@ describe('memoize', function() {
     expect(fn).toBeCalledWith(13)
   })
 
+  it('should memoize multi', function() {
+    const fn = jest.fn(a => {
+      return a
+    })
+
+    const getInput = () => ({
+      data: { hahah: 'xx' },
+      hooks: [() => {}, console.log]
+    })
+
+    const m = memoize(fn)
+    const input = getInput()
+    expect(m.fn(input)).toBe(input)
+    expect(m.fn(input)).toBe(input)
+    expect(fn).toBeCalledTimes(1)
+
+    expect(m.fn(getInput())).toBe(input)
+    expect(fn).toBeCalledTimes(1)
+
+    input.abc = '222'
+    expect(m.fn(input)).toBe(input)
+    expect(fn).toBeCalledTimes(1)
+  })
+
   it('should memoize update when error happened async', async () => {
     const fn = jest.fn(a => {
       return new Promise((resolve, reject) => {

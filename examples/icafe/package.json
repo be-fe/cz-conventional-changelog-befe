@@ -1,0 +1,10 @@
+{
+  "name": "icafe",
+  "private": true,
+  "lang": "zh",
+  "icafe": {
+    "spaceId": "befe-erp"
+  },
+  "version": "0.0.1",
+  "dependencies": {}
+}

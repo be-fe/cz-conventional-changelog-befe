@@ -8,7 +8,9 @@ const minimist = require('minimist')
 const omit = require('lodash.omit')
 const gitRemoteOriginUrl = require('git-remote-origin-url')
 const getCommitLintTypes = require('conventional-commit-types-befe')
-const { parse } = require('url')
+const osLocale = require('os-locale')
+const findUp = require('find-up')
+const loadJson = require('load-json-file')
 
 const { name } = require('../package')
 const utils = require('./utils')
@@ -48,9 +50,16 @@ removeArgv(['--read', '--retry'])
 module.exports = async function({
   pkg,
   gitRemoteUrl,
-  suggestAdaptors = require('./suggest-adaptor')
+  suggestAdaptors = require('./suggest-adaptor'),
+  userc = true
 } = {}) {
-  pkg.lang = pkg.lang || 'zh'
+  let lang = (osLocale.sync() || '')
+    .toLowerCase()
+    .trim()
+    .startsWith('zh')
+    ? 'zh'
+    : 'en'
+  pkg.lang = pkg.lang || lang
   gitRemoteUrl = gitRemoteUrl || (await gitRemoteOriginUrl())
 
   i.setLanguage(utils.getLanguage(pkg.lang))
@@ -61,22 +70,27 @@ module.exports = async function({
     types.typeKeys,
     pkg.lang
   )
-  const gitRootPath = utils.getGitRootPath()
-
-  let config = pkg.config ? pkg.config[name] : {}
+  let config = pkg.config && pkg.config[name]
+  if (!config && userc) {
+    let rcPath = await findUp(`.${name}rc`)
+    if (rcPath) {
+      config = await loadJson(rcPath)
+    }
+  }
   config = Object.assign({ scopeSuggestOnly: false }, config)
 
   return {
     prompter: function(cz, commit) {
       const adaptorConfig = omit(config, ['scopes', 'scopeSuggestOnly'])
-
       suggestAdaptors = suggestAdaptors.map(
-        Class => new Class(adaptorConfig, pkg)
+        Class => new Class(adaptorConfig, pkg, gitRemoteUrl)
       )
 
-      const gitUrlParsed = parse(gitRemoteUrl)
       const enabledSuggest = suggestAdaptors.find(adaptor =>
-        adaptor.isEnabled({ gitUrlParsed })
+        adaptor.isEnabled()
+      )
+      const isEveryDisabled = suggestAdaptors.every(
+        adaptor => !adaptor.options.suggestEnabled
       )
 
       function makeSuggestLocal(options) {
@@ -89,18 +103,25 @@ module.exports = async function({
       }
 
       if (enabledSuggest) {
-        console.warn(i18n('succ.suggest-enabled', enabledSuggest.name))
-      } else {
+        console.log(
+          i18n(
+            'succ.suggest-enabled',
+            [
+              enabledSuggest.name,
+              enabledSuggest.namespace ? `(${enabledSuggest.namespace})` : ''
+            ].join(' ')
+          )
+        )
+      } else if (!isEveryDisabled) {
         console.warn(i18n('warn.suggest-disabled'))
       }
-
       console.log(i18n('first.hint'))
 
       const type = enabledSuggest ? 'auto-complete' : 'input'
       cz.registerPrompt('auto-complete', autoComplete)
       const store = new FileStore({
         storePath: nps.join(__dirname, '../inquirer-cache.json'),
-        key: gitRootPath
+        key: utils.getGitRootPath() || (pkg && pkg.name)
       })
 
       let scopeProps = { type: 'input' }

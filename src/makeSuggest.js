@@ -9,14 +9,13 @@ const cliWidth = require('cli-width')
 const fuzzy = require('fuzzy')
 const sliceInput = require('@moyuyc/inquirer-autocomplete-prompt/slice-input')
 const terminalLink = require('terminal-link')
-const stripAnsi = require('strip-ansi')
-const stringWidth = require('string-width')
 const namedRegexp = require('named-js-regexp')
+const stringWidth = require('string-width')
 
 const memoize = require('./memoize')
 const debug = require('./debug')
-const parsePlaceholder = require('./parsePlaceholder')
-const { newTable } = require('./utils')
+const { parse } = require('./parsePlaceholder')
+const { newTable, sliceString, trimRight } = require('./utils')
 
 function linkify(text = '') {
   return `#__link__#${text}#__link__#`
@@ -32,29 +31,6 @@ function unlinkify(text, replacer = m => m) {
   return text.replace(reg, (_, m) =>
     replacer(m, { times: ++i, endIndex: RegExp.lastMatch.length })
   )
-}
-
-function sliceString(string, maxLen) {
-  let striped = stripAnsi(string)
-
-  const ellipsis = '…'
-  const ellipsisLen = stringWidth(ellipsis)
-  let isSliced = false
-  while (
-    stringWidth(striped) >
-    maxLen - (striped.endsWith(ellipsis) ? 0 : ellipsisLen)
-  ) {
-    isSliced = true
-    if (/\s$/.test(striped)) {
-      striped = striped.replace(/\s+$/, '')
-    } else {
-      striped = striped.slice(0, -1)
-    }
-  }
-  if (isSliced && !striped.endsWith(ellipsis)) {
-    string = striped + ellipsis
-  }
-  return string // .slice(0, maxLen)
 }
 
 const INCREASE_LEN = linkify('').length
@@ -122,7 +98,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
     if (!list || !Array.isArray(list)) {
       return Promise.resolve([])
     }
-    const parsed = parsePlaceholder(
+    const parsed = parse(
       adaptor.options.placeholder || adaptor.config.placeholder
     )
     const colWidths = parsed.map(d => {
@@ -153,8 +129,11 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
       const row = []
       parsed.forEach(d => {
         if (d.type === 'data') {
-          if (d.value in flattenData) {
-            let str = String(flattenData[d.value])
+          if (flattenData.hasOwnProperty(d.value)) {
+            let str = `${d.prefix || ''}${String(
+              flattenData[d.value]
+            )}${d.suffix || ''}`
+
             if (d.data.link && linkEnabled) {
               str = linkify(str)
             }
@@ -209,24 +188,22 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
 
       let name = line
       if (line == null) {
-        name = sliceString(
-          data.row
-            .map(cell => {
-              let str = ''
-              if (typeof cell === 'string') {
-                str = cell
-              } else if (cell && typeof cell.content === 'string') {
-                str = cell.content
-              }
-              return unlinkify(str)
-            })
-            .join(''),
-          len
-        )
+        name = data.row
+          .map(cell => {
+            let str = ''
+            if (typeof cell === 'string') {
+              str = cell
+            } else if (cell && typeof cell.content === 'string') {
+              str = cell.content
+            }
+            return unlinkify(str)
+          })
+          .join('')
+        // name = sliceString(trimRight(name), len)
       }
       return {
         data: data.flattenData,
-        name,
+        name: sliceString(trimRight(name), len),
         value: data.value,
         cursor: data.cursor
       }

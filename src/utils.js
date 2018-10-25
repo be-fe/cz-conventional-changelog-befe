@@ -3,9 +3,11 @@ const findUp = require('find-up')
 const readPkgUp = require('read-pkg-up')
 const tranz = require('tranz').default
 const tranzCommitIcafe = require('tranz-commit-icafe')
-const memoize = require('memoize-one')
 const Table = require('cli-table3')
 const isPrimitive = require('is-primitive')
+// const stripAnsi = require('strip-ansi')
+const stringWidth = require('string-width')
+const cliWidth = require('cli-width')
 
 const tableConfig = {
   chars: {
@@ -50,7 +52,7 @@ function rightPadTypes(tObj, tkeys, lang) {
   const lines = table.toString().split('\n')
   return list.map((d, i) => {
     return {
-      name: lines[i],
+      name: sliceString(lines[i], cliWidth() - 4),
       value: d.value
     }
   })
@@ -144,7 +146,35 @@ function simplifyData(
   return newData
 }
 
+function sliceString(string, maxLen, { deltaLen = 0 } = {}) {
+  // let string = string
+  const ellipsis = '…'
+  const ellipsisLen = stringWidth(ellipsis)
+  let isSliced = false
+  while (
+    deltaLen + stringWidth(string) >
+    maxLen - (string.endsWith(ellipsis) ? 0 : ellipsisLen)
+  ) {
+    isSliced = true
+    if (/\s$/.test(string)) {
+      string = trimRight(string)
+    } else {
+      string = string.slice(0, -1)
+    }
+  }
+  if (isSliced && !string.endsWith(ellipsis)) {
+    string = string + ellipsis
+  }
+  return string // .slice(0, maxLen)
+}
+
+function trimRight(str) {
+  return str.replace(/\s+$/, '')
+}
+
 module.exports = {
+  sliceString,
+  trimRight,
   getPackageJsonConfigs,
   rightPadTypes,
   getLanguage,

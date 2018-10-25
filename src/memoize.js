@@ -5,13 +5,22 @@
  *
  */
 
-const memoizeOne = require('memoize-one')
-const iseq = require('lodash.isequal')
+const iseq = require('lodash.isequalwith')
+const memoize = require('./memfn')
 
-const memoize = fn => memoizeOne(fn, iseq)
+function allowFnEq(a, b) {
+  return iseq(a, b, (oldV, newV) => {
+    if (typeof oldV === 'function' && typeof newV === 'function') {
+      return oldV.toString() === newV.toString()
+    }
+  })
+}
 
 module.exports = function(fn) {
-  const update = () => (mfn = memoize(fn))
+  const update = () =>
+    (mfn = memoize(fn, {
+      eq: allowFnEq
+    }))
 
   let mfn
   update()

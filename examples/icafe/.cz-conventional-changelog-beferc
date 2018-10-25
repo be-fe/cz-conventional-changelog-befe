@@ -1,0 +1,14 @@
+{
+  "icafe": {
+    "suggestEnabled": true
+  },
+  "scopes": [
+    "yes",
+    "noop",
+    {
+      "name": "name",
+      "value": "ok"
+    }
+  ],
+  "scopeSuggestOnly": false
+}

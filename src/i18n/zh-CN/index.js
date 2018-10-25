@@ -16,6 +16,7 @@ module.exports = {
     "3. 多个 issues 以'空格'或者','分隔 (e.g. re asset-123,#2345,#123123,hard-3)\n",
   'subject.error': '请书写简短的描述，该项必填',
   'warn.suggest-disabled':
-    chalk.redBright('警告：icafe 提示功能未开启，详情请查看 ') +
-    chalk.cyan('https://bit.ly/2JdTSQT')
+    chalk.redBright('警告：卡片提示功能未开启，详情请查看 ') +
+    chalk.cyan('https://bit.ly/2JdTSQT'),
+  'succ.suggest-enabled': chalk.green('${1} 卡片提示功能开启！')
 }

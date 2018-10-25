@@ -1,0 +1,16 @@
+{
+  "github": {
+    "suggestEnabled": true,
+    "data": {
+    }
+  },
+  "scopes": [
+    "yes",
+    "noop",
+    {
+      "name": "name",
+      "value": "ok"
+    }
+  ],
+  "scopeSuggestOnly": false
+}

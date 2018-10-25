@@ -40,10 +40,10 @@ function htmlDecode(str) {
 }
 
 class Icafe extends AdaptorInterface {
-  static displayName = 'icafe'
+  static displayName = 'Icafe'
 
   constructor(config, pkg) {
-    super(config, pkg)
+    super(...arguments)
     this.pkg.icafe = normalizeIcafeByPkg(pkg)
     this.data = this.normalizeConfigData({
       spaceId: Card.constructor.defaultData.spaceId,
@@ -74,6 +74,9 @@ class Icafe extends AdaptorInterface {
       defaultKeyName: 'name'
     })
     return {
+      issueURL:
+        namespace &&
+        `http://newicafe.baidu.com/issue/${namespace}-${data.sequence}/show`,
       assignees: data.responsiblePeople,
       state: data.status,
       issueId: namespace ? `${namespace}-${data.sequence}` : null,
@@ -83,12 +86,8 @@ class Icafe extends AdaptorInterface {
     }
   }
 
-  isEnabled({ gitUrlParsed } = {}) {
-    return (
-      super.isEnabled.apply(this, arguments) &&
-      this.data.username &&
-      this.data.password
-    )
+  _isEnabled() {
+    return this.data.username && this.data.password && this.namespace
   }
 
   memoized = memoize(Card.fetch.bind(Card))

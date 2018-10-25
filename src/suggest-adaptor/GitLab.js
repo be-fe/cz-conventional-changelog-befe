@@ -16,8 +16,8 @@ const { simplifyData } = require('../utils')
 
 const omit = require('lodash.omit')
 
-class GitHub extends AdaptorInterface {
-  static displayName = 'GitHub'
+class GitLab extends AdaptorInterface {
+  static displayName = 'GitLab'
 
   constructor(config, pkg) {
     super(...arguments)
@@ -101,4 +101,4 @@ class GitHub extends AdaptorInterface {
   }
 }
 
-module.exports = GitHub
+module.exports = GitLab
