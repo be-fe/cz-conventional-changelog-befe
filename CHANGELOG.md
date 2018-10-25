@@ -1,3 +1,13 @@
+# [2.0.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.9...v2.0.0) (2018-10-25)
+
+### 新特性
+
+- 支持 baidu gitlab / gitlab / github issues \([597ecb9](https://github.com/be-fe/cz-conventional-changelog-befe/commit/597ecb9)), 关闭 [#1](https://github.com/be-fe/cz-conventional-changelog-befe/issues/1)
+
+### 突破性变化
+
+- 配置规则修改
+
 ## [1.7.9](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.8...v1.7.9) (2018-10-24)
 
 ## [1.7.8](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.7...v1.7.8) (2018-10-23)
