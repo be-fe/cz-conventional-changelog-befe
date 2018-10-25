@@ -1,5 +1,12 @@
 # cz-conventional-changelog-befe
 
+[![Build status](https://img.shields.io/travis/be-fe/cz-conventional-changelog-befe/master.svg?style=flat-square)](https://travis-ci.org/be-fe/cz-conventional-changelog-befe)
+[![Test coverage](https://img.shields.io/codecov/c/github/be-fe/cz-conventional-changelog-befe.svg?style=flat-square)](https://codecov.io/github/be-fe/cz-conventional-changelog-befe?branch=master)
+[![NPM version](https://img.shields.io/npm/v/cz-conventional-changelog-befe.svg?style=flat-square)](https://www.npmjs.com/package/cz-conventional-changelog-befe)
+[![NPM Downloads](https://img.shields.io/npm/dm/cz-conventional-changelog-befe.svg?style=flat-square&maxAge=43200)](https://www.npmjs.com/package/cz-conventional-changelog-befe)
+[![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
+
 > cz adaptor for baidu BEFE
 
 cz-conventional-changelog-befe 是为 BEFE 团队定制的 [commitizen 适配器](https://github.com/commitizen/cz-cli#adapters).
