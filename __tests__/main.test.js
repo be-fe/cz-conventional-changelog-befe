@@ -149,9 +149,9 @@ describe('scopes', () => {
     expect(inqStore.mock.calls.length).toEqual(1)
     expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope')).toMatchInlineSnapshot(`
 Object {
-  "message": "Denote the scope of this change (location, browser, compile, etc.):
-",
+  "message": "Denote the scope of this change (location, browser, compile, etc.):",
   "name": "scope",
+  "noResultText": null,
   "source": [Function],
   "suggestOnly": false,
   "type": "auto-complete",
@@ -168,9 +168,9 @@ Object {
     expect(inqStore.mock.calls.length).toEqual(1)
     expect(obj).toMatchInlineSnapshot(`
 Object {
-  "message": "Denote the scope of this change (location, browser, compile, etc.):
-",
+  "message": "Denote the scope of this change (location, browser, compile, etc.):",
   "name": "scope",
+  "noResultText": null,
   "source": [Function],
   "suggestOnly": true,
   "type": "auto-complete",
@@ -206,9 +206,9 @@ Array [
     expect(inqStore.mock.calls.length).toEqual(1)
     expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope')).toMatchInlineSnapshot(`
 Object {
-  "message": "Denote the scope of this change (location, browser, compile, etc.):
-",
+  "message": "Denote the scope of this change (location, browser, compile, etc.):",
   "name": "scope",
+  "noResultText": null,
   "type": "input",
 }
 `)

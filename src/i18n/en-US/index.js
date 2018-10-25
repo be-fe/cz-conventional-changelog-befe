@@ -1,16 +1,12 @@
 const chalk = require('chalk').default
 
 module.exports = {
-  'first.hint':
-    'Line 1 will be cropped at 100 characters. All other ' +
-    'lines will be wrapped after 100 characters.',
+  'first.hint': 'Line 1 will be cropped at 100 characters. All other ' + 'lines will be wrapped after 100 characters.',
   'feat.hint': "Select the type of change that you're committing:",
   'has-breaking.hint': 'Are there any breaking changes?',
   'has-issues.hint': 'Does this change affect any open issues?',
-  'scope.hint':
-    'Denote the scope of this change (location, browser, compile, etc.):\n',
-  'subject.hint':
-    'Write a short, imperative tense description of the change:\n',
+  'scope.hint': 'Denote the scope of this change (location, browser, compile, etc.):',
+  'subject.hint': 'Write a short, imperative tense description of the change:\n',
   'body.hint': 'Provide a longer description of the change:\n',
   'breaking.change.hint': 'List any breaking changes:\n',
   'issues.hint':

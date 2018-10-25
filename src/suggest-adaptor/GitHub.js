@@ -27,9 +27,7 @@ class GitHub extends AdaptorInterface {
     })
 
     this.namespace = this.gitUrlObj && this.gitUrlObj.repository
-    this.matchRegexps = this.matchRegexps.concat([
-      '^(?<namespace>[\\w-.:]+/[\\w-.:]+)#(?<matching>.*)$'
-    ])
+    this.matchRegexps = this.matchRegexps.concat(['^(?<namespace>[\\w-.:]+/[\\w-.:]+)#(?<matching>.*)$'])
   }
 
   normalizeConfigData(data) {
@@ -44,10 +42,7 @@ class GitHub extends AdaptorInterface {
     return {
       ...data,
       issueURL: data.html_url,
-      issueId:
-        namespace && namespace !== this.namespace
-          ? `${namespace}#${data.number}`
-          : null,
+      issueId: namespace && namespace !== this.namespace ? `${namespace}#${data.number}` : null,
       type: data.pull_request ? 'pr' : 'issue'
     }
   }
@@ -67,8 +62,7 @@ class GitHub extends AdaptorInterface {
         prefix = ''
       }
       if (Array.isArray(val)) {
-        string +=
-          val.map(x => (x ? `${prefix}${String(x)}` : '')).join(' ') + ' '
+        string += val.map(x => (x ? `${prefix}${String(x)}` : '')).join(' ') + ' '
       } else if (val && isPrimitive(val)) {
         string += ' ' + String(val)
       }
@@ -90,7 +84,7 @@ class GitHub extends AdaptorInterface {
         q: this.queryStringify(query),
         sort: this.data.sort,
         order: this.data.order,
-        pre_page: this.data.per_page
+        per_page: this.data.per_page
       },
       hooks: {
         beforeRequest: [data => debug('gh-request: %O', data)]

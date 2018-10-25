@@ -15,6 +15,7 @@ const ghgot = require('gh-got')
 const glgot = require('gl-got')
 
 jest.mock('icafe-api')
+jest.mock('terminal-link')
 jest.mock('cli-width')
 jest.mock('gh-got')
 jest.mock('gl-got')
@@ -376,12 +377,9 @@ describe('makeSuggest', function() {
         gh.flattenIncomeData({
           url: 'https://api.github.com/repos/imcuttle/edam/issues/6',
           repository_url: 'https://api.github.com/repos/imcuttle/edam',
-          labels_url:
-            'https://api.github.com/repos/imcuttle/edam/issues/6/labels{/name}',
-          comments_url:
-            'https://api.github.com/repos/imcuttle/edam/issues/6/comments',
-          events_url:
-            'https://api.github.com/repos/imcuttle/edam/issues/6/events',
+          labels_url: 'https://api.github.com/repos/imcuttle/edam/issues/6/labels{/name}',
+          comments_url: 'https://api.github.com/repos/imcuttle/edam/issues/6/comments',
+          events_url: 'https://api.github.com/repos/imcuttle/edam/issues/6/events',
           html_url: 'https://github.com/imcuttle/edam/issues/6',
           id: 347840765,
           node_id: 'MDU6SXNzdWUzNDc4NDA3NjU=',
@@ -396,19 +394,14 @@ describe('makeSuggest', function() {
             url: 'https://api.github.com/users/imcuttle',
             html_url: 'https://github.com/imcuttle',
             followers_url: 'https://api.github.com/users/imcuttle/followers',
-            following_url:
-              'https://api.github.com/users/imcuttle/following{/other_user}',
+            following_url: 'https://api.github.com/users/imcuttle/following{/other_user}',
             gists_url: 'https://api.github.com/users/imcuttle/gists{/gist_id}',
-            starred_url:
-              'https://api.github.com/users/imcuttle/starred{/owner}{/repo}',
-            subscriptions_url:
-              'https://api.github.com/users/imcuttle/subscriptions',
+            starred_url: 'https://api.github.com/users/imcuttle/starred{/owner}{/repo}',
+            subscriptions_url: 'https://api.github.com/users/imcuttle/subscriptions',
             organizations_url: 'https://api.github.com/users/imcuttle/orgs',
             repos_url: 'https://api.github.com/users/imcuttle/repos',
-            events_url:
-              'https://api.github.com/users/imcuttle/events{/privacy}',
-            received_events_url:
-              'https://api.github.com/users/imcuttle/received_events',
+            events_url: 'https://api.github.com/users/imcuttle/events{/privacy}',
+            received_events_url: 'https://api.github.com/users/imcuttle/received_events',
             type: 'User',
             site_admin: false
           },
@@ -416,8 +409,7 @@ describe('makeSuggest', function() {
             {
               id: 816932358,
               node_id: 'MDU6TGFiZWw4MTY5MzIzNTg=',
-              url:
-                'https://api.github.com/repos/imcuttle/edam/labels/enhancement',
+              url: 'https://api.github.com/repos/imcuttle/edam/labels/enhancement',
               name: 'enhancement',
               color: 'a2eeef',
               default: true
@@ -434,19 +426,14 @@ describe('makeSuggest', function() {
             url: 'https://api.github.com/users/imcuttle',
             html_url: 'https://github.com/imcuttle',
             followers_url: 'https://api.github.com/users/imcuttle/followers',
-            following_url:
-              'https://api.github.com/users/imcuttle/following{/other_user}',
+            following_url: 'https://api.github.com/users/imcuttle/following{/other_user}',
             gists_url: 'https://api.github.com/users/imcuttle/gists{/gist_id}',
-            starred_url:
-              'https://api.github.com/users/imcuttle/starred{/owner}{/repo}',
-            subscriptions_url:
-              'https://api.github.com/users/imcuttle/subscriptions',
+            starred_url: 'https://api.github.com/users/imcuttle/starred{/owner}{/repo}',
+            subscriptions_url: 'https://api.github.com/users/imcuttle/subscriptions',
             organizations_url: 'https://api.github.com/users/imcuttle/orgs',
             repos_url: 'https://api.github.com/users/imcuttle/repos',
-            events_url:
-              'https://api.github.com/users/imcuttle/events{/privacy}',
-            received_events_url:
-              'https://api.github.com/users/imcuttle/received_events',
+            events_url: 'https://api.github.com/users/imcuttle/events{/privacy}',
+            received_events_url: 'https://api.github.com/users/imcuttle/received_events',
             type: 'User',
             site_admin: false
           },
@@ -455,26 +442,19 @@ describe('makeSuggest', function() {
               login: 'imcuttle',
               id: 13509258,
               node_id: 'MDQ6VXNlcjEzNTA5MjU4',
-              avatar_url:
-                'https://avatars2.githubusercontent.com/u/13509258?v=4',
+              avatar_url: 'https://avatars2.githubusercontent.com/u/13509258?v=4',
               gravatar_id: '',
               url: 'https://api.github.com/users/imcuttle',
               html_url: 'https://github.com/imcuttle',
               followers_url: 'https://api.github.com/users/imcuttle/followers',
-              following_url:
-                'https://api.github.com/users/imcuttle/following{/other_user}',
-              gists_url:
-                'https://api.github.com/users/imcuttle/gists{/gist_id}',
-              starred_url:
-                'https://api.github.com/users/imcuttle/starred{/owner}{/repo}',
-              subscriptions_url:
-                'https://api.github.com/users/imcuttle/subscriptions',
+              following_url: 'https://api.github.com/users/imcuttle/following{/other_user}',
+              gists_url: 'https://api.github.com/users/imcuttle/gists{/gist_id}',
+              starred_url: 'https://api.github.com/users/imcuttle/starred{/owner}{/repo}',
+              subscriptions_url: 'https://api.github.com/users/imcuttle/subscriptions',
               organizations_url: 'https://api.github.com/users/imcuttle/orgs',
               repos_url: 'https://api.github.com/users/imcuttle/repos',
-              events_url:
-                'https://api.github.com/users/imcuttle/events{/privacy}',
-              received_events_url:
-                'https://api.github.com/users/imcuttle/received_events',
+              events_url: 'https://api.github.com/users/imcuttle/events{/privacy}',
+              received_events_url: 'https://api.github.com/users/imcuttle/received_events',
               type: 'User',
               site_admin: false
             }
@@ -510,8 +490,7 @@ describe('makeSuggest', function() {
       expect(list).toEqual([
         {
           cursor: 3,
-          name:
-            '#17 [issue] (closed) Feat: handlebar.js inject some bulit-in helper (e.g. `eq`)',
+          name: '#17 [issue] (closed) Feat: handlebar.js inject some bulit-in helper (e.g. `eq`)',
           value: '#17'
         }
       ])
@@ -602,8 +581,7 @@ describe('makeSuggest', function() {
           downvotes: 0,
           due_date: null,
           confidential: false,
-          web_url:
-            'http://gitlab.foo.com/be-fe/conventional-changelog-befe/issues/1'
+          web_url: 'http://gitlab.foo.com/be-fe/conventional-changelog-befe/issues/1'
         })
       ).toEqual(require('./fixture/gitlab'))
     })

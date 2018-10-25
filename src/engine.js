@@ -31,9 +31,7 @@ const args = minimist(process.argv.slice(2), {
 function removeArgv(flags = []) {
   flags.forEach(flag => {
     while (true) {
-      let readIndex = process.argv.findIndex(
-        x => x === flag || x.startsWith(flag + '=')
-      )
+      let readIndex = process.argv.findIndex(x => x === flag || x.startsWith(flag + '='))
       if (readIndex >= 0) {
         process.argv.splice(readIndex, 1)
       } else {
@@ -57,12 +55,7 @@ function catchError(fn) {
 // This can be any kind of SystemJS compatible module.
 // We use Commonjs here, but ES6 or AMD would do just
 // fine.
-module.exports = function({
-  pkg,
-  gitRemoteUrl,
-  suggestAdaptors = require('./suggest-adaptor'),
-  userc = true
-} = {}) {
+module.exports = function({ pkg, gitRemoteUrl, suggestAdaptors = require('./suggest-adaptor'), userc = true } = {}) {
   return {
     prompter: catchError(async function(cz, commit) {
       let lang = (osLocale.sync() || '')
@@ -91,30 +84,15 @@ module.exports = function({
           config = await loadJson(rcPath)
         }
       }
-      config = Object.assign(
-        { scopeSuggestOnly: false, remoteName: 'origin' },
-        config
-      )
-      const adaptorConfig = omit(config, [
-        'scopes',
-        'scopeSuggestOnly',
-        'remoteName'
-      ])
+      config = Object.assign({ scopeSuggestOnly: false, remoteName: 'origin' }, config)
+      const adaptorConfig = omit(config, ['scopes', 'scopeSuggestOnly', 'remoteName'])
 
-      gitRemoteUrl =
-        gitRemoteUrl ||
-        (await getGitRemoteUrl(null, { remoteName: config.remoteName }))
+      gitRemoteUrl = gitRemoteUrl || (await getGitRemoteUrl(null, { remoteName: config.remoteName }))
 
-      suggestAdaptors = suggestAdaptors.map(
-        Class => new Class(adaptorConfig, pkg, gitRemoteUrl)
-      )
+      suggestAdaptors = suggestAdaptors.map(Class => new Class(adaptorConfig, pkg, gitRemoteUrl))
 
-      const enabledSuggest = suggestAdaptors.find(adaptor =>
-        adaptor.isEnabled()
-      )
-      const isEveryDisabled = suggestAdaptors.every(
-        adaptor => !adaptor.options.suggestEnabled
-      )
+      const enabledSuggest = suggestAdaptors.find(adaptor => adaptor.isEnabled())
+      const isEveryDisabled = suggestAdaptors.every(adaptor => !adaptor.options.suggestEnabled)
 
       function makeSuggestLocal(options) {
         if (!enabledSuggest) {
@@ -129,10 +107,7 @@ module.exports = function({
         console.log(
           i18n(
             'succ.suggest-enabled',
-            [
-              enabledSuggest.name,
-              enabledSuggest.namespace ? `(${enabledSuggest.namespace})` : ''
-            ].join(' ')
+            [enabledSuggest.name, enabledSuggest.namespace ? `(${enabledSuggest.namespace})` : ''].join(' ')
           )
         )
       } else if (!isEveryDisabled) {
@@ -155,9 +130,7 @@ module.exports = function({
           return fuzzy
             .filter(input || '', config.scopes, {
               extract: function(el) {
-                return typeof el === 'string'
-                  ? el
-                  : el.value + (' ' + el.name || '')
+                return typeof el === 'string' ? el : el.value + (' ' + el.name || '')
               }
             })
             .map(x => {
@@ -189,12 +162,13 @@ module.exports = function({
               },
               {
                 name: 'scope',
+                noResultText: null,
                 message: i18n('scope.hint'),
                 ...scopeProps
               },
               {
                 type: type,
-                // noResultText: null,
+                noResultText: null,
                 suggestOnly: true,
                 name: 'subject',
                 source: makeSuggestLocal({ suggestTitle: true }),
@@ -266,12 +240,7 @@ module.exports = function({
           scope = scope ? '(' + answers.scope.trim() + ')' : ''
 
           // Hard limit this line
-          const head = (
-            (answers.type || '') +
-            scope +
-            ': ' +
-            (answers.subject || '').trim()
-          ).slice(0, maxLineWidth)
+          const head = ((answers.type || '') + scope + ': ' + (answers.subject || '').trim()).slice(0, maxLineWidth)
 
           // Wrap these lines at 100 characters
           const body = wrap(answers.body, wrapOptions)
@@ -279,9 +248,7 @@ module.exports = function({
           // Apply breaking change prefix, removing it if already present
 
           let breaking = answers.breaking ? answers.breaking.trim() : ''
-          breaking = breaking
-            ? 'BREAKING CHANGE: ' + breaking.replace(/^BREAKING CHANGE: /, '')
-            : ''
+          breaking = breaking ? 'BREAKING CHANGE: ' + breaking.replace(/^BREAKING CHANGE: /, '') : ''
           breaking = wrap(breaking, wrapOptions)
           let issues = answers.issues || ''
           issues = issues ? wrap(issues, wrapOptions) : ''
@@ -294,9 +261,7 @@ module.exports = function({
             message += '\n\n' + footer
           }
 
-          const transform =
-            (enabledSuggest && enabledSuggest.transformCommitMessage) ||
-            (m => m)
+          const transform = (enabledSuggest && enabledSuggest.transformCommitMessage) || (m => m)
 
           return Promise.resolve(transform(message)).then(message => {
             typeof commit === 'function' &&
