@@ -1,3 +1,9 @@
+## [2.0.1](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.0.0...v2.0.1) (2018-10-25)
+
+### 性能提升
+
+- remove result text in suggest \([808b875](https://github.com/be-fe/cz-conventional-changelog-befe/commit/808b875))
+
 # [2.0.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v1.7.9...v2.0.0) (2018-10-25)
 
 ### 新特性
