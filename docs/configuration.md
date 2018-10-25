@@ -7,8 +7,15 @@
 <!-- toc -->
 
 - [文件位置](#%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE)
+- [配置规则](#%E9%85%8D%E7%BD%AE%E8%A7%84%E5%88%99)
 - [配置项](#%E9%85%8D%E7%BD%AE%E9%A1%B9)
-  - [``](#)
+  - [`*scopes`](#scopes)
+  - [`*scopeSuggestOnly`](#scopesuggestonly)
+  - [`*remoteName`](#remotename)
+  - [`suggestEnabled`](#suggestenabled)
+  - [`placeholder`](#placeholder)
+  - [`token`](#token)
+  - [`data`](#data)
 
 <!-- tocstop -->
 
