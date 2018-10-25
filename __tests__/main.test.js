@@ -18,17 +18,15 @@ function engine(opt = {}) {
   let packageJson = utils.getPackageJsonConfigs(opt.cwd)
   let types = getCommitlintTypes(packageJson.lang)
 
-  return Promise.resolve(
-    _engine(
-      Object.assign(
-        {
-          language: packageJson.lang,
-          typeObjects: types.typeObjects,
-          typeKeys: types.typeKeys,
-          pkg: packageJson
-        },
-        opt
-      )
+  return _engine(
+    Object.assign(
+      {
+        language: packageJson.lang,
+        typeObjects: types.typeObjects,
+        typeKeys: types.typeKeys,
+        pkg: packageJson
+      },
+      opt
     )
   )
 }
@@ -54,9 +52,8 @@ describe('main', function() {
       icafe: {
         spaceId: 'abc'
       }
-    }).then(({ prompter }) => {
-      prompter(inquirer, msg => {
-        expect(msg).toMatchInlineSnapshot(`
+    }).prompter(inquirer, msg => {
+      expect(msg).toMatchInlineSnapshot(`
 "feat(abc): subject
 
 body
@@ -65,99 +62,93 @@ BREAKING CHANGE: breaking
 
 issues"
 `)
-        done()
-      })
+      done()
     })
   })
+})
 
-  it('should main without body', done => {
-    __setAnswers({
-      type: 'feat',
-      scope: 'abc',
-      subject: 'subject',
-      // body: '',
-      breaking: 'breaking',
-      issues: 'issues'
-    })
+it('should main without body', done => {
+  __setAnswers({
+    type: 'feat',
+    scope: 'abc',
+    subject: 'subject',
+    // body: '',
+    breaking: 'breaking',
+    issues: 'issues'
+  })
 
-    engine({
-      icafe: {
-        spaceId: 'abc'
-      }
-    }).then(({ prompter }) =>
-      prompter(inquirer, msg => {
-        expect(msg).toMatchInlineSnapshot(`
+  engine({
+    icafe: {
+      spaceId: 'abc'
+    }
+  }).prompter(inquirer, msg => {
+    expect(msg).toMatchInlineSnapshot(`
 "feat(abc): subject
 
 BREAKING CHANGE: breaking
 
 issues"
 `)
-        done()
-      })
-    )
+    done()
+  })
+})
+
+it('should main without issues', done => {
+  __setAnswers({
+    type: 'feat',
+    scope: 'abc',
+    subject: 'subject',
+    // body: '',
+    breaking: 'breaking',
+    issues: ''
   })
 
-  it('should main without issues', done => {
-    __setAnswers({
-      type: 'feat',
-      scope: 'abc',
-      subject: 'subject',
-      // body: '',
-      breaking: 'breaking',
-      issues: ''
-    })
-
-    engine({
-      icafe: {
-        spaceId: 'abc'
-      }
-    }).then(({ prompter }) => {
-      prompter(inquirer, msg => {
-        expect(msg).toMatchInlineSnapshot(`
+  engine({
+    icafe: {
+      spaceId: 'abc'
+    }
+  }).prompter(inquirer, msg => {
+    expect(msg).toMatchInlineSnapshot(`
 "feat(abc): subject
 
 BREAKING CHANGE: breaking"
 `)
-        done()
-      })
-    })
+    done()
+  })
+})
+
+it('should main without issues & breaking & body', function(done) {
+  __setAnswers({
+    type: 'feat',
+    scope: 'abc',
+    subject: 'subject',
+    // body: '',
+    breaking: '',
+    issues: ''
   })
 
-  it('should main without issues & breaking & body', function(done) {
-    __setAnswers({
-      type: 'feat',
-      scope: 'abc',
-      subject: 'subject',
-      // body: '',
-      breaking: '',
-      issues: ''
-    })
+  engine({
+    icafe: {
+      spaceId: 'abc'
+    }
+  }).prompter(inquirer, msg => {
+    expect(msg).toMatchInlineSnapshot(`"feat(abc): subject"`)
+    done()
+  })
+})
 
-    engine({
-      icafe: {
-        spaceId: 'abc'
-      }
-    }).then(({ prompter }) => {
-      prompter(inquirer, msg => {
-        expect(msg).toMatchInlineSnapshot(`"feat(abc): subject"`)
-        done()
-      })
-    })
+describe('scopes', () => {
+  beforeEach(() => {
+    inqStore.mockClear()
   })
 
-  describe('scopes', () => {
-    beforeEach(() => {
-      inqStore.mockClear()
-    })
-
-    it('should scopes-no-suggestOnly', async function() {
-      ;(await engine({
-        cwd: nps.join(__dirname, 'fixture/scopes/scopes-no-suggestOnly')
-      })).prompter(inquirer.prompt)
-      expect(inqStore.mock.calls.length).toEqual(1)
-      expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
-        .toMatchInlineSnapshot(`
+  it('should scopes-no-suggestOnly', async function() {
+    await engine({
+      cwd: nps.join(__dirname, 'fixture/scopes/scopes-no-suggestOnly')
+    }).prompter(inquirer.prompt)
+    expect(inqStore.mock.calls.length).toEqual(1)
+    expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
+      .toMatchInlineSnapshot(`
 Object {
   "message": "表示此更改的范围（location，browser，compile等）：",
   "name": "scope",
@@ -166,16 +157,16 @@ Object {
   "type": "auto-complete",
 }
 `)
-    })
+  })
 
-    it('should scopes-suggestOnly', async function() {
-      ;(await engine({
-        cwd: nps.join(__dirname, 'fixture/scopes/scopes-suggestOnly')
-      })).prompter(inquirer.prompt)
+  it('should scopes-suggestOnly', async function() {
+    await engine({
+      cwd: nps.join(__dirname, 'fixture/scopes/scopes-suggestOnly')
+    }).prompter(inquirer.prompt)
 
-      const obj = inqStore.mock.calls[0][1].find(x => x.name === 'scope')
-      expect(inqStore.mock.calls.length).toEqual(1)
-      expect(obj).toMatchInlineSnapshot(`
+    const obj = inqStore.mock.calls[0][1].find(x => x.name === 'scope')
+    expect(inqStore.mock.calls.length).toEqual(1)
+    expect(obj).toMatchInlineSnapshot(`
 Object {
   "message": "表示此更改的范围（location，browser，compile等）：",
   "name": "scope",
@@ -184,45 +175,47 @@ Object {
   "type": "auto-complete",
 }
 `)
-      console.log(obj)
+    console.log(obj)
 
-      expect(Promise.resolve(obj.source({}, 'abc'))).resolves
-        .toMatchInlineSnapshot(`
+    expect(Promise.resolve(obj.source({}, 'abc'))).resolves
+      .toMatchInlineSnapshot(`
 Array [
   "abc",
   "abcddd",
 ]
 `)
-    })
+  })
 
-    it('should scopes-source', async function() {
-      ;(await engine({
-        cwd: nps.join(__dirname, 'fixture/scopes/scopes-suggestOnly')
-      })).prompter(inquirer.prompt)
+  it('should scopes-source', async function() {
+    inqStore.mockRestore()
+    await engine({
+      cwd: nps.join(__dirname, 'fixture/scopes/scopes-suggestOnly')
+    }).prompter(inquirer.prompt)
 
-      const obj = inqStore.mock.calls[0][1].find(x => x.name === 'scope')
-      expect(Promise.resolve(obj.source({}, 'abc'))).resolves.toEqual([
-        'abc',
-        'abcddd'
-      ])
-      expect(Promise.resolve(obj.source({}, 'value'))).resolves.toEqual([
-        { name: 'name', value: 'value' }
-      ])
-    })
+    const obj = inqStore.mock.calls[0][1].find(x => x.name === 'scope')
+    expect(Promise.resolve(obj.source({}, 'abc'))).resolves.toEqual([
+      'abc',
+      'abcddd'
+    ])
+    expect(Promise.resolve(obj.source({}, 'value'))).resolves.toEqual([
+      { name: 'name', value: 'value' }
+    ])
+  })
 
-    it('should scopes-noscopes', async function() {
-      ;(await engine({
-        cwd: nps.join(__dirname, 'fixture/scopes/noscopes')
-      })).prompter(inquirer.prompt)
-      expect(inqStore.mock.calls.length).toEqual(1)
-      expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
-        .toMatchInlineSnapshot(`
+  it('should scopes-noscopes', async function() {
+    inqStore.mockRestore()
+    await engine({
+      cwd: nps.join(__dirname, 'fixture/scopes/noscopes')
+    }).prompter(inquirer.prompt)
+
+    expect(inqStore.mock.calls.length).toEqual(1)
+    expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
+      .toMatchInlineSnapshot(`
 Object {
   "message": "表示此更改的范围（location，browser，compile等）：",
   "name": "scope",
   "type": "input",
 }
 `)
-    })
   })
 })

@@ -8,13 +8,16 @@
 const makeSuggest = require('../src/makeSuggest')
 const Icafe = require('../src/suggest-adaptor/Icafe')
 const GitHub = require('../src/suggest-adaptor/GitHub')
+const GitLab = require('../src/suggest-adaptor/GitLab')
 
 const { __setFetch, _stub } = require('icafe-api')
 const ghgot = require('gh-got')
+const glgot = require('gl-got')
 
 jest.mock('icafe-api')
 jest.mock('cli-width')
 jest.mock('gh-got')
+jest.mock('gl-got')
 
 describe('makeSuggest', function() {
   describe('icafe', () => {
@@ -65,7 +68,7 @@ describe('makeSuggest', function() {
         {
           cursor: 74,
           name:
-            '#4045 [ Bug ] (  closed  ) 候选人中心在未找到该手机号码”的后面加上当前登录的百度账号，目前是未找到该手机号码--，正常为暂未找到该手机号码13735342343的有效应聘信息                                                                                                                                                                                                                          余聪,siii                                                                                           ',
+            '#4045  [Bug]    (closed)   候选人中心在未找到该手机号码”的后面加上当前登录的百度账号，目前是未找到该手机号码--，正常为暂未找到该手机号码13735342343的有效应聘信息                                                                                                                                                                                                                                                                                                                                                                                余聪,s…',
           value:
             '候选人中心在未找到该手机号码”的后面加上当前登录的百度账号，目前是未找到该手机号码--，正常为暂未找到该手机号码13735342343的有效应聘信息  ok '
         }
@@ -92,7 +95,7 @@ describe('makeSuggest', function() {
         {
           cursor: 19,
           name:
-            '#4045 [ Bug ] (  closed  ) 候选人中心在未找到该手机号码”的后面加上当前登录的百度账号，目前是未找到该手机号码--，正常为暂未找到该手机号码13735342343的有效应聘信息                                                                                                                                                                                                                          余聪,siii                                                                                           ',
+            '#4045  [Bug]    (closed)   候选人中心在未找到该手机号码”的后面加上当前登录的百度账号，目前是未找到该手机号码--，正常为暂未找到该手机号码13735342343的有效应聘信息                                                                                                                                                                                                                                                                                                                                                                                余聪,s…',
           value: 'mock-namespace-4045  ok '
         }
       ])
@@ -364,6 +367,7 @@ describe('makeSuggest', function() {
       normalizeConfigData.mockClear()
       fetch.mockClear()
       flattenIncomeData.mockClear()
+      ghgot.mockClear()
     })
 
     it('should fattenData', function() {
@@ -507,7 +511,7 @@ describe('makeSuggest', function() {
         {
           cursor: 3,
           name:
-            '#17 [issue] (closed) Feat: handlebar.js inject some bulit-in helper (e.g. `eq`)                                                                                                                                                                                                                                                                                                                                                                                                          ',
+            '#17 [issue] (closed) Feat: handlebar.js inject some bulit-in helper (e.g. `eq`)',
           value: '#17'
         }
       ])
@@ -516,11 +520,210 @@ describe('makeSuggest', function() {
     it('should queryStringify', function() {
       expect(
         new GitHub().queryStringify({
-          word: ['nihao', 'NOT', 'hello'],
+          search: ['nihao', 'NOT', 'hello'],
           a: ['aaaa', 'bbb'],
           c: ['oooo']
         })
       ).toMatchInlineSnapshot(`"nihao NOT hello a:aaaa a:bbb c:oooo"`)
+    })
+
+    it('should makeSuggest memorized on GitHub', async () => {
+      const gl = new GitHub({}, {}, 'https://github.com/imcuttle/edam.git')
+      const suggest = makeSuggest(gl, { suggestTitle: true })
+      await suggest('test asd www', { cursor: 0 })
+      expect(fetch).toBeCalledWith({
+        matching: 'test',
+        namespace: 'imcuttle/edam'
+      })
+      expect(fetch).toBeCalledTimes(1)
+      expect(ghgot).toBeCalledTimes(1)
+
+      await suggest('test asd www', { cursor: 0 })
+      expect(fetch).toBeCalledWith({
+        matching: 'test',
+        namespace: 'imcuttle/edam'
+      })
+      expect(fetch).toBeCalledTimes(1)
+      expect(ghgot).toBeCalledTimes(1)
+
+      await suggest('testasd www', { cursor: 0 })
+      expect(fetch).toBeCalledTimes(2)
+      expect(ghgot).toBeCalledTimes(2)
+
+      await suggest('test asd www', { cursor: 0 })
+      expect(fetch).toBeCalledTimes(2)
+      expect(ghgot).toBeCalledTimes(2)
+    })
+  })
+
+  describe('GitLab', function() {
+    let normalizeConfigData
+    let fetch
+    let flattenIncomeData
+    beforeEach(() => {
+      normalizeConfigData = jest.spyOn(GitLab.prototype, 'normalizeConfigData')
+      fetch = jest.spyOn(GitLab.prototype, 'fetch')
+      flattenIncomeData = jest.spyOn(GitLab.prototype, 'flattenIncomeData')
+    })
+
+    afterEach(() => {
+      normalizeConfigData.mockClear()
+      fetch.mockClear()
+      flattenIncomeData.mockClear()
+      glgot.mockClear()
+    })
+
+    it('should flattenIncomeData on GitLab', async () => {
+      const gl = new GitLab({}, {}, 'https://gitlab.com/imcuttle/edam.git')
+      expect(
+        gl.flattenIncomeData({
+          id: 12913,
+          iid: 1,
+          project_id: 33595,
+          title: 'test: 测试 Gitlab issue reference',
+          description: 'hhhhahah :+1_tone1:',
+          state: 'opened',
+          created_at: '2018-08-27T19:41:22.137+08:00',
+          updated_at: '2018-08-27T19:41:22.137+08:00',
+          labels: [],
+          milestone: null,
+          assignees: [],
+          author: {
+            name: 'yucong02',
+            username: 'yucong02',
+            id: 10352,
+            state: 'active',
+            avatar_url: null,
+            web_url: 'http://gitlab.foo.com/yucong02'
+          },
+          assignee: null,
+          user_notes_count: 0,
+          upvotes: 0,
+          downvotes: 0,
+          due_date: null,
+          confidential: false,
+          web_url:
+            'http://gitlab.foo.com/be-fe/conventional-changelog-befe/issues/1'
+        })
+      ).toEqual(require('./fixture/gitlab'))
+    })
+
+    it('should makeSuggest on GitLab', async () => {
+      const gl = new GitLab({}, {}, 'https://gitlab.com/imcuttle/edam.git')
+      expect(gl.namespace).toBe('imcuttle/edam')
+
+      const suggest = makeSuggest(gl)
+      const list = await suggest('#test', {
+        cursor: 0
+      })
+
+      expect(fetch).toBeCalledWith({
+        matching: 'test',
+        namespace: 'imcuttle/edam'
+      })
+      expect(fetch).toBeCalledTimes(1)
+
+      expect(list).toEqual([
+        {
+          cursor: 2,
+          name: '#1 [issue] (opened) test: 测试 Gitlab issue reference',
+          value: '#1'
+        }
+      ])
+    })
+
+    it('should makeSuggest other repo on GitLab', async () => {
+      const gl = new GitLab({}, {}, 'https://gitlab.com/imcuttle/edam.git')
+      const suggest = makeSuggest(gl)
+      const list = await suggest('test/asd/www#', {
+        cursor: 0
+      })
+
+      expect(fetch).toBeCalledWith({
+        matching: '',
+        namespace: 'test/asd/www'
+      })
+      expect(fetch).toBeCalledTimes(1)
+
+      expect(list).toEqual([
+        {
+          cursor: 14,
+          name: '#1 [issue] (opened) test: 测试 Gitlab issue reference',
+          value: 'test/asd/www#1'
+        }
+      ])
+    })
+
+    it('should makeSuggest other repo issue number even `suggestTitle` on GitLab', async () => {
+      const gl = new GitLab({}, {}, 'https://gitlab.com/imcuttle/edam.git')
+      const suggest = makeSuggest(gl, { suggestTitle: true })
+      const list = await suggest('test/:-asd/www#', {
+        cursor: 0
+      })
+
+      expect(fetch).toBeCalledWith({
+        matching: '',
+        namespace: 'test/:-asd/www'
+      })
+      expect(fetch).toBeCalledTimes(1)
+
+      expect(list).toEqual([
+        {
+          cursor: 16,
+          name: '#1 [issue] (opened) test: 测试 Gitlab issue reference',
+          value: 'test/:-asd/www#1'
+        }
+      ])
+    })
+
+    it('should makeSuggest this repo title when `suggestTitle` on GitLab', async () => {
+      const gl = new GitLab({}, {}, 'https://gitlab.com/imcuttle/edam.git')
+      const suggest = makeSuggest(gl, { suggestTitle: true })
+      const list = await suggest('test asd www', {
+        cursor: 0
+      })
+
+      expect(fetch).toBeCalledWith({
+        matching: 'test',
+        namespace: 'imcuttle/edam'
+      })
+      expect(fetch).toBeCalledTimes(1)
+
+      expect(list).toEqual([
+        {
+          cursor: 31,
+          name: '#1 [issue] (opened) test: 测试 Gitlab issue reference',
+          value: 'test: 测试 Gitlab issue reference asd www'
+        }
+      ])
+    })
+
+    it('should makeSuggest memorized on GitLab', async () => {
+      const gl = new GitLab({}, {}, 'https://gitlab.com/imcuttle/edam.git')
+      const suggest = makeSuggest(gl, { suggestTitle: true })
+      await suggest('test asd www', { cursor: 0 })
+      expect(fetch).toBeCalledWith({
+        matching: 'test',
+        namespace: 'imcuttle/edam'
+      })
+      expect(fetch).toBeCalledTimes(1)
+      expect(glgot).toBeCalledTimes(1)
+
+      await suggest('test asd www', { cursor: 0 })
+      expect(fetch).toBeCalledWith({
+        matching: 'test',
+        namespace: 'imcuttle/edam'
+      })
+      expect(fetch).toBeCalledTimes(1)
+      expect(glgot).toBeCalledTimes(1)
+
+      await suggest('testasd www', { cursor: 0 })
+      expect(fetch).toBeCalledTimes(2)
+      expect(glgot).toBeCalledTimes(2)
+
+      await suggest('test asd www', { cursor: 0 })
+      expect(fetch).toBeCalledTimes(2)
+      expect(glgot).toBeCalledTimes(2)
     })
   })
 })

@@ -5,7 +5,7 @@
  *
  */
 
-const gh = require('gh-got')
+const gl = require('gl-got')
 const isPrimitive = require('is-primitive')
 const toArray = require('lodash.toarray')
 
@@ -26,9 +26,10 @@ class GitLab extends AdaptorInterface {
       ...this.data
     })
 
-    this.namespace = this.gitUrlObj && this.gitUrlObj.repository
+    this.namespace =
+      this.gitUrlObj && this.gitUrlObj.pathname.replace(/\.git$/i, '')
     this.matchRegexps = this.matchRegexps.concat([
-      '^(?<namespace>\\w+/\\w+)#(?<matching>.*)$'
+      '^(?<namespace>[\\w-.:]+/[\\w-.:]+(/[\\w-.:]+)?)#(?<matching>.*)$'
     ])
   }
 
@@ -36,68 +37,88 @@ class GitLab extends AdaptorInterface {
     return data
   }
 
-  flattenIncomeData(data, { namespace } = {}) {
+  get baseUrl() {
+    const { protocol, hostname } = this.gitUrlObj || {}
+    const isHTTP = ['http:', 'https:'].includes(protocol)
+    return `${isHTTP ? protocol : 'http:'}//${hostname}`
+  }
+
+  flattenIncomeData(data, { namespace = this.namespace } = {}) {
     data = simplifyData(data, {
-      flattenKeys: ['user', { name: 'labels', valueKey: 'name' }],
-      defaultKeyName: 'login'
+      defaultKeyName: 'name'
     })
     return {
-      issueURL:
-        namespace && `https://github.com/${namespace}/issues/${data.number}`,
+      ...data,
+      issueURL: data.web_url,
       issueId:
         namespace && namespace !== this.namespace
-          ? `${namespace}#${data.number}`
+          ? `${namespace}#${data.iid}`
           : null,
       type: data.pull_request ? 'pr' : 'issue',
-      ...data
+      number: data.iid
     }
   }
 
   _isEnabled() {
-    return this.gitUrlObj && this.gitUrlObj.host === 'github.com'
+    return this.gitUrlObj && this.gitUrlObj.hostname.startsWith('gitlab.')
   }
 
-  memoized = memoize(gh)
+  memoized = memoize(gl)
 
   queryStringify(query) {
-    let string = ''
-    Object.keys(query).forEach(key => {
-      const val = query[key]
-      let prefix = key + ':'
-      if (key === 'word') {
-        prefix = ''
-      }
-      if (Array.isArray(val)) {
-        string +=
-          val.map(x => (x ? `${prefix}${String(x)}` : '')).join(' ') + ' '
-      } else if (val && isPrimitive(val)) {
-        string += ' ' + String(val)
-      }
-    })
-    return string.trim()
+    query = { ...query }
+
+    function getChunks(query) {
+      let stringChunks = []
+      Object.keys(query).forEach(name => {
+        let val = query[name]
+        if (name === 'search') {
+          if (Array.isArray(val)) {
+            val = val.join('+')
+          }
+        }
+        if (name === 'iids') {
+          toArray(val).forEach(id => {
+            stringChunks = stringChunks.concat(getChunks({ 'iids[]': id }))
+          })
+          return
+        }
+
+        if (Array.isArray(val)) {
+          val = val.join(',')
+        }
+        if (val instanceof Date) {
+          val = val.toISOString()
+        }
+
+        stringChunks.push(
+          `${encodeURIComponent(name)}=${encodeURIComponent(String(val))}`
+        )
+      })
+      return stringChunks
+    }
+
+    return getChunks(query).join('&')
   }
 
   async fetch({ namespace, matching }) {
-    const query = omit(this.data, ['sort', 'order'])
-    query.word = toArray(query.word || [])
-    query.repo = toArray(query.repo || [])
-    matching && query.word.push(matching)
-    namespace && query.repo.push(namespace)
-
-    let { body } = await this.memoized.fn('search/issues', {
-      method: 'get',
-      token: this.options.token,
-      query: {
-        q: this.queryStringify(query),
-        sort: this.data.sort,
-        order: this.data.order
-      },
-      hooks: {
-        beforeRequest: [data => debug('gh-request: %O', data)]
+    const query = { ...this.data }
+    query.search = toArray(query.search || [])
+    query.search.push(matching)
+    let { body } = await this.memoized.fn(
+      `/api/v4/projects/${encodeURIComponent(namespace)}/issues`,
+      {
+        method: 'get',
+        token: this.options.token,
+        baseUrl: this.baseUrl,
+        query: this.queryStringify(query),
+        hooks: {
+          beforeRequest: [data => debug('gl-request: %O', data)]
+        }
       }
-    })
+    )
 
-    return body && body.items
+    return body
   }
 }
 

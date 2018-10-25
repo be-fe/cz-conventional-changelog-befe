@@ -1,18 +1,9 @@
 {
   "icafe": {
-    "suggestEnabled": true,
+    "suggestEnabled": false,
     "data": {
       "spaceId": "befe-erp"
     }
   },
-  "suggestEnabled": false,
-  "scopes": [
-    "yes",
-    "noop",
-    {
-      "name": "name",
-      "value": "ok"
-    }
-  ],
-  "scopeSuggestOnly": false
+  "suggestEnabled": true
 }

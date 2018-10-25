@@ -42,7 +42,12 @@ class AdaptorInterface {
     this.gitUrl = gitUrl
 
     if (gitUrl) {
+      gitUrl = gitUrl.trim()
       this.gitUrlObj = parse(gitUrl)
+      // git@gitlab.com:gitlab-org/release/tasks.git
+      if (/^git@.+?:(.+)$/.test(gitUrl)) {
+        this.gitUrlObj.path = this.gitUrlObj.pathname = RegExp.$1
+      }
     } else if (pkg.repository) {
       const repository =
         typeof pkg.repository === 'string' ? pkg.repository : pkg.repository.url

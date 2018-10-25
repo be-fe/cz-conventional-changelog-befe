@@ -9,11 +9,12 @@ const iseq = require('lodash.isequalwith')
 const memoize = require('./memfn')
 
 function allowFnEq(a, b) {
-  return iseq(a, b, (oldV, newV) => {
+  const rlt = iseq(a, b, (oldV, newV) => {
     if (typeof oldV === 'function' && typeof newV === 'function') {
       return oldV.toString() === newV.toString()
     }
   })
+  return rlt
 }
 
 module.exports = function(fn) {

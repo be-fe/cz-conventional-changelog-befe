@@ -7,3 +7,4 @@ tmp/
 inquirer-cache.json
 lib/
 temp
+/coverage

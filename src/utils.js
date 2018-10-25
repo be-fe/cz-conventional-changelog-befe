@@ -52,7 +52,7 @@ function rightPadTypes(tObj, tkeys, lang) {
   const lines = table.toString().split('\n')
   return list.map((d, i) => {
     return {
-      name: sliceString(lines[i], cliWidth() - 4),
+      name: trimRight(sliceString(lines[i], cliWidth() - 4)),
       value: d.value
     }
   })

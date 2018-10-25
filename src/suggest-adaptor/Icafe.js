@@ -67,13 +67,14 @@ class Icafe extends AdaptorInterface {
     return data
   }
 
-  flattenIncomeData(data, { namespace } = {}) {
+  flattenIncomeData(data, { namespace = this.namespace } = {}) {
     data = simplifyData(data, {
       flattenKeys: [{ name: 'responsiblePeople', valueKey: 'name' }],
       rollbackKeys: [{ name: 'properties', valueKey: 'displayValue' }],
       defaultKeyName: 'name'
     })
     return {
+      ...data,
       issueURL:
         namespace &&
         `http://newicafe.baidu.com/issue/${namespace}-${data.sequence}/show`,
@@ -81,7 +82,6 @@ class Icafe extends AdaptorInterface {
       state: data.status,
       issueId: namespace ? `${namespace}-${data.sequence}` : null,
       number: data.sequence,
-      ...data,
       title: htmlDecode(data.title)
     }
   }

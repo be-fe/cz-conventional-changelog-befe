@@ -44,44 +44,57 @@ function removeArgv(flags = []) {
 }
 removeArgv(['--read', '--retry'])
 
+function catchError(fn) {
+  return async function() {
+    try {
+      return await fn.apply(this, arguments)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+}
+
 // This can be any kind of SystemJS compatible module.
 // We use Commonjs here, but ES6 or AMD would do just
 // fine.
-module.exports = async function({
+module.exports = function({
   pkg,
   gitRemoteUrl,
   suggestAdaptors = require('./suggest-adaptor'),
   userc = true
 } = {}) {
-  let lang = (osLocale.sync() || '')
-    .toLowerCase()
-    .trim()
-    .startsWith('zh')
-    ? 'zh'
-    : 'en'
-  pkg.lang = pkg.lang || lang
-  gitRemoteUrl = gitRemoteUrl || (await gitRemoteOriginUrl())
-
-  i.setLanguage(utils.getLanguage(pkg.lang))
-  const types = getCommitLintTypes(pkg.lang)
-
-  const typeChoices = utils.rightPadTypes(
-    types.typeObjects,
-    types.typeKeys,
-    pkg.lang
-  )
-  let config = pkg.config && pkg.config[name]
-  if (!config && userc) {
-    let rcPath = await findUp(`.${name}rc`)
-    if (rcPath) {
-      config = await loadJson(rcPath)
-    }
-  }
-  config = Object.assign({ scopeSuggestOnly: false }, config)
-
   return {
-    prompter: function(cz, commit) {
+    prompter: catchError(async function(cz, commit) {
+      let lang = (osLocale.sync() || '')
+        .toLowerCase()
+        .trim()
+        .startsWith('zh')
+        ? 'zh'
+        : 'en'
+      pkg.lang = pkg.lang || lang
+      gitRemoteUrl = gitRemoteUrl || (await gitRemoteOriginUrl())
+
+      i.setLanguage(utils.getLanguage(pkg.lang))
+      let { typeKeys, typeObjects } = getCommitLintTypes(pkg.lang)
+
+      // Convert `Fix` to `fix`
+      const set = new Set()
+      typeKeys.forEach(type => {
+        set.add(type.toLowerCase())
+      })
+      typeKeys = Array.from(set)
+
+      const typeChoices = utils.rightPadTypes(typeObjects, typeKeys, pkg.lang)
+      let config = pkg.config && pkg.config[name]
+      if (!config && userc) {
+        let rcPath = await findUp(`.${name}rc`)
+        if (rcPath) {
+          config = await loadJson(rcPath)
+        }
+      }
+      config = Object.assign({ scopeSuggestOnly: false }, config)
       const adaptorConfig = omit(config, ['scopes', 'scopeSuggestOnly'])
+
       suggestAdaptors = suggestAdaptors.map(
         Class => new Class(adaptorConfig, pkg, gitRemoteUrl)
       )
@@ -144,89 +157,91 @@ module.exports = async function({
       }
 
       function prompt() {
-        return inquirerStore(
-          cz.prompt,
-          [
-            {
-              type: 'auto-complete',
-              name: 'type',
-              message: i18n('feat.hint'),
-              source: (answers, input) => {
-                return fuzzy
-                  .filter(input || '', typeChoices, {
-                    extract: function(el) {
-                      return (el.value || '') + ' ' + el.name
-                    }
-                  })
-                  .map(x => {
-                    return x.original
-                  })
-              }
-            },
-            {
-              name: 'scope',
-              message: i18n('scope.hint'),
-              ...scopeProps
-            },
-            {
-              type: type,
-              noResultText: null,
-              suggestOnly: true,
-              name: 'subject',
-              source: makeSuggestLocal({ suggestTitle: true }),
-              validate: input => {
-                if (!input) {
-                  return i18n('subject.error')
+        return Promise.resolve(
+          inquirerStore(
+            cz.prompt,
+            [
+              {
+                type: 'auto-complete',
+                name: 'type',
+                message: i18n('feat.hint'),
+                source: (answers, input) => {
+                  return fuzzy
+                    .filter(input || '', typeChoices, {
+                      extract: function(el) {
+                        return (el.value || '') + ' ' + el.name
+                      }
+                    })
+                    .map(x => {
+                      return x.original
+                    })
                 }
-                return true
               },
-              message: i18n('subject.hint')
-            },
+              {
+                name: 'scope',
+                message: i18n('scope.hint'),
+                ...scopeProps
+              },
+              {
+                type: type,
+                // noResultText: null,
+                suggestOnly: true,
+                name: 'subject',
+                source: makeSuggestLocal({ suggestTitle: true }),
+                validate: input => {
+                  if (!input) {
+                    return i18n('subject.error')
+                  }
+                  return true
+                },
+                message: i18n('subject.hint')
+              },
+              {
+                type: 'input',
+                name: 'body',
+                message: i18n('body.hint')
+              },
+              {
+                type: 'confirm',
+                default: false,
+                name: 'hasBreaking',
+                message: i18n('has-breaking.hint')
+              },
+              {
+                type: 'input',
+                when: ans => ans.hasBreaking,
+                name: 'breaking',
+                message: i18n('breaking.change.hint')
+                // noResultText: null,
+                // suggestOnly: true,
+                // source: makeSuggest()
+              },
+              {
+                type: 'confirm',
+                default: false,
+                name: 'hasIssues',
+                message: i18n('has-issues.hint')
+              },
+              {
+                when: ans => ans.hasIssues,
+                type: type,
+                suggestOnly: true,
+                // noResultText: null,
+                name: 'issues',
+                source: makeSuggestLocal({ always: true }),
+                message: i18n('issues.hint')
+              }
+            ],
             {
-              type: 'input',
-              name: 'body',
-              message: i18n('body.hint')
-            },
-            {
-              type: 'confirm',
-              default: false,
-              name: 'hasBreaking',
-              message: i18n('has-breaking.hint')
-            },
-            {
-              type: 'input',
-              when: ans => ans.hasBreaking,
-              name: 'breaking',
-              message: i18n('breaking.change.hint')
-              // noResultText: null,
-              // suggestOnly: true,
-              // source: makeSuggest()
-            },
-            {
-              type: 'confirm',
-              default: false,
-              name: 'hasIssues',
-              message: i18n('has-issues.hint')
-            },
-            {
-              when: ans => ans.hasIssues,
-              type: type,
-              suggestOnly: true,
-              noResultText: null,
-              name: 'issues',
-              source: makeSuggestLocal({ always: true }),
-              message: i18n('issues.hint')
+              mode: args['read'] ? 'duplex' : 'write',
+              store
             }
-          ],
-          {
-            mode: args['read'] ? 'duplex' : 'write',
-            store
-          }
+          )
         )
       }
 
       prompt()
-        .then(function(answers) {
+        .then(function(answers = {}) {
           const maxLineWidth = 100
 
           const wrapOptions = {
@@ -281,6 +296,6 @@ module.exports = async function({
           })
         })
         .catch(console.error)
-    }
+    })
   }
 }

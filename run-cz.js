@@ -47,6 +47,7 @@ p()
 
     return cz.then(({ prompter }) => {
       return prompter(inquirer, function(msg, options) {
+        console.log('\n------------ output --------------')
         console.log(msg)
         console.log('----------------------------------')
         console.log(options)

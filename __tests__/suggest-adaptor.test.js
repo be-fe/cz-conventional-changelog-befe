@@ -30,7 +30,7 @@ AdaptorInterface {
   "namespace": "",
   "options": Object {
     "hah": "ok",
-    "placeholder": "#{number?link} [{type?align=center}] ({state?align=center}) {title?w=35%}  {assignees?w=10%}",
+    "placeholder": "{#:number?link} {[:type:]?align=center} {(:state:)?align=center} {title?w=50%}  {assignees}",
     "suggestEnabled": true,
   },
   "pkg": Object {},
@@ -49,7 +49,7 @@ AdaptorInterface {
     expect(ad.options).toEqual({
       hah: 'ok',
       placeholder:
-        '#{number?link} [{type?align=center}] ({state?align=center}) {title?w=35%}  {assignees?w=10%}',
+        '{#:number?link} {[:type:]?align=center} {(:state:)?align=center} {title?w=50%}  {assignees}',
       suggestEnabled: true
     })
     expect(ad.data).toEqual({})
@@ -70,7 +70,7 @@ AdaptorInterface {
     ).toEqual({
       hahh: 'okk',
       placeholder:
-        '#{number?link} [{type?align=center}] ({state?align=center}) {title?w=35%}  {assignees?w=10%}',
+        '{#:number?link} {[:type:]?align=center} {(:state:)?align=center} {title?w=50%}  {assignees}',
       suggestEnabled: true
     })
     expect(ad.data).toEqual({})
@@ -92,7 +92,7 @@ AdaptorInterface {
     })
   })
 
-  it('should GitLab.gitUrlObj', function() {
+  it('should gitUrlObj', function() {
     expect(
       new GitLab({}, {}, 'https://gitlab.com/gitlab-org/release/tasks.git')
         .gitUrlObj
@@ -133,8 +133,8 @@ Url {
   "href": "git@gitlab.com:gitlab-org/release/tasks.git",
   "name": "release",
   "owner": "gitlab-org",
-  "path": "git@gitlab.com:gitlab-org/release/tasks.git",
-  "pathname": "git@gitlab.com:gitlab-org/release/tasks.git",
+  "path": "gitlab-org/release/tasks.git",
+  "pathname": "gitlab-org/release/tasks.git",
   "port": null,
   "protocol": null,
   "query": null,
@@ -144,15 +144,13 @@ Url {
   "slashes": null,
 }
 `)
-  })
-
-  expect(
-    new GitLab(
-      {},
-      {},
-      'ssh://g@gitlab.baidu.com:8022/be-fe/conventional-changelog-befe.git'
-    ).gitUrlObj
-  ).toMatchInlineSnapshot(`
+    expect(
+      new GitLab(
+        {},
+        {},
+        'ssh://g@gitlab.baidu.com:8022/be-fe/conventional-changelog-befe.git'
+      ).gitUrlObj
+    ).toMatchInlineSnapshot(`
 Url {
   "auth": "g",
   "branch": "master",
@@ -175,13 +173,13 @@ Url {
 }
 `)
 
-  expect(
-    new GitLab(
-      {},
-      {},
-      'git+https://github.com/be-fe/cz-conventional-changelog-befe.git'
-    ).gitUrlObj
-  ).toMatchInlineSnapshot(`
+    expect(
+      new GitLab(
+        {},
+        {},
+        'git+https://github.com/be-fe/cz-conventional-changelog-befe.git'
+      ).gitUrlObj
+    ).toMatchInlineSnapshot(`
 Url {
   "auth": null,
   "branch": "master",
@@ -203,4 +201,27 @@ Url {
   "slashes": true,
 }
 `)
+  })
+
+  it('should GitLab-stringify', function() {
+    const gl = new GitLab(
+      {},
+      {},
+      'https://github.com/be-fe/cz-conventional-changelog-befe.git'
+    )
+
+    expect(gl.baseUrl).toMatchInlineSnapshot(`"https://github.com"`)
+    expect(
+      decodeURIComponent(
+        gl.queryStringify({
+          search: ['assss', 'bbb'],
+          iids: [44, 55],
+          labels: ['你', 'hhh'],
+          created_after: new Date(0)
+        })
+      )
+    ).toMatchInlineSnapshot(
+      `"search=assss+bbb&iids[]=44&iids[]=55&labels=你,hhh&created_after=1970-01-01T00:00:00.000Z"`
+    )
+  })
 })

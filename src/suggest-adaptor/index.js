@@ -7,5 +7,6 @@
 
 const Icafe = require('./Icafe')
 const GitHub = require('./GitHub')
+const GitLab = require('./GitLab')
 
-module.exports = [Icafe, GitHub]
+module.exports = [Icafe, GitHub, GitLab]

@@ -42,6 +42,8 @@ const INCREASE_LEN = linkify('').length
  * @return {Function}
  */
 function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
+  let controller = memoize(adaptor.fetch.bind(adaptor))
+
   return async function suggest(input, { cursor } = {}) {
     input = input || ''
     let { leftIndex, rightIndex, matching } = sliceInput(input, {
@@ -55,6 +57,9 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
     let match
     adaptor.matchRegexps.some(rgx => {
       match = namedRegexp(rgx).exec(matching)
+      if (match) {
+        debug('matched regexp', rgx)
+      }
       return !!match
     })
     let inputData = { namespace, matching }
@@ -66,8 +71,10 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
       inputData = {
         ...inputData,
         ...groups,
-        namespace: groups.namespace || namespace,
-        matching: groups.matching || matching
+        namespace:
+          typeof groups.namespace === 'string' ? groups.namespace : namespace,
+        matching:
+          typeof groups.matching === 'string' ? groups.matching : matching
       }
     } else if (suggestTitle) {
       isStartIssue = true
@@ -83,7 +90,6 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
     if (!inputData.namespace) {
       return Promise.resolve([])
     }
-    let controller = memoize(adaptor.fetch.bind(adaptor))
     debug('input data：%O', inputData)
     debug('请求数据：%O', adaptor.data)
     let list = []
@@ -164,7 +170,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
     })
 
     const tableLines = table.toString().split('\n')
-    debug(tableLines)
+    // debug(tableLines)
     debug(
       'choices.length: %d, tableLines.length: %d.',
       choices.length,
@@ -210,7 +216,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
     })
 
     return fuzzy
-      .filter(inputData.matching, choices, {
+      .filter(inputData.matching.replace(/\+/g, ' '), choices, {
         extract: function(el) {
           const data = el.data
           return (

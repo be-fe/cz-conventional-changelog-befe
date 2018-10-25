@@ -28,7 +28,7 @@ class GitHub extends AdaptorInterface {
 
     this.namespace = this.gitUrlObj && this.gitUrlObj.repository
     this.matchRegexps = this.matchRegexps.concat([
-      '^(?<namespace>\\w+/\\w+)#(?<matching>.*)$'
+      '^(?<namespace>[\\w-.:]+/[\\w-.:]+)#(?<matching>.*)$'
     ])
   }
 
@@ -36,20 +36,19 @@ class GitHub extends AdaptorInterface {
     return data
   }
 
-  flattenIncomeData(data, { namespace } = {}) {
+  flattenIncomeData(data, { namespace = this.namespace } = {}) {
     data = simplifyData(data, {
       flattenKeys: ['user', { name: 'labels', valueKey: 'name' }],
       defaultKeyName: 'login'
     })
     return {
-      issueURL:
-        namespace && `https://github.com/${namespace}/issues/${data.number}`,
+      ...data,
+      issueURL: data.html_url,
       issueId:
         namespace && namespace !== this.namespace
           ? `${namespace}#${data.number}`
           : null,
-      type: data.pull_request ? 'pr' : 'issue',
-      ...data
+      type: data.pull_request ? 'pr' : 'issue'
     }
   }
 
@@ -64,7 +63,7 @@ class GitHub extends AdaptorInterface {
     Object.keys(query).forEach(key => {
       const val = query[key]
       let prefix = key + ':'
-      if (key === 'word') {
+      if (key === 'search') {
         prefix = ''
       }
       if (Array.isArray(val)) {
@@ -78,10 +77,10 @@ class GitHub extends AdaptorInterface {
   }
 
   async fetch({ namespace, matching }) {
-    const query = omit(this.data, ['sort', 'order'])
-    query.word = toArray(query.word || [])
+    const query = omit(this.data, ['sort', 'order', 'per_page'])
+    query.search = toArray(query.search || [])
     query.repo = toArray(query.repo || [])
-    matching && query.word.push(matching)
+    matching && query.search.push(matching)
     namespace && query.repo.push(namespace)
 
     let { body } = await this.memoized.fn('search/issues', {
@@ -90,7 +89,8 @@ class GitHub extends AdaptorInterface {
       query: {
         q: this.queryStringify(query),
         sort: this.data.sort,
-        order: this.data.order
+        order: this.data.order,
+        pre_page: this.data.per_page
       },
       hooks: {
         beforeRequest: [data => debug('gh-request: %O', data)]
