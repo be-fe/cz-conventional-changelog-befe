@@ -147,10 +147,10 @@ describe('scopes', () => {
       cwd: nps.join(__dirname, 'fixture/scopes/scopes-no-suggestOnly')
     }).prompter(inquirer.prompt)
     expect(inqStore.mock.calls.length).toEqual(1)
-    expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
-      .toMatchInlineSnapshot(`
+    expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope')).toMatchInlineSnapshot(`
 Object {
-  "message": "表示此更改的范围（location，browser，compile等）：",
+  "message": "Denote the scope of this change (location, browser, compile, etc.):
+",
   "name": "scope",
   "source": [Function],
   "suggestOnly": false,
@@ -168,7 +168,8 @@ Object {
     expect(inqStore.mock.calls.length).toEqual(1)
     expect(obj).toMatchInlineSnapshot(`
 Object {
-  "message": "表示此更改的范围（location，browser，compile等）：",
+  "message": "Denote the scope of this change (location, browser, compile, etc.):
+",
   "name": "scope",
   "source": [Function],
   "suggestOnly": true,
@@ -177,8 +178,7 @@ Object {
 `)
     console.log(obj)
 
-    expect(Promise.resolve(obj.source({}, 'abc'))).resolves
-      .toMatchInlineSnapshot(`
+    expect(Promise.resolve(obj.source({}, 'abc'))).resolves.toMatchInlineSnapshot(`
 Array [
   "abc",
   "abcddd",
@@ -193,13 +193,8 @@ Array [
     }).prompter(inquirer.prompt)
 
     const obj = inqStore.mock.calls[0][1].find(x => x.name === 'scope')
-    expect(Promise.resolve(obj.source({}, 'abc'))).resolves.toEqual([
-      'abc',
-      'abcddd'
-    ])
-    expect(Promise.resolve(obj.source({}, 'value'))).resolves.toEqual([
-      { name: 'name', value: 'value' }
-    ])
+    expect(Promise.resolve(obj.source({}, 'abc'))).resolves.toEqual(['abc', 'abcddd'])
+    expect(Promise.resolve(obj.source({}, 'value'))).resolves.toEqual([{ name: 'name', value: 'value' }])
   })
 
   it('should scopes-noscopes', async function() {
@@ -209,10 +204,10 @@ Array [
     }).prompter(inquirer.prompt)
 
     expect(inqStore.mock.calls.length).toEqual(1)
-    expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope'))
-      .toMatchInlineSnapshot(`
+    expect(inqStore.mock.calls[0][1].find(x => x.name === 'scope')).toMatchInlineSnapshot(`
 Object {
-  "message": "表示此更改的范围（location，browser，compile等）：",
+  "message": "Denote the scope of this change (location, browser, compile, etc.):
+",
   "name": "scope",
   "type": "input",
 }
