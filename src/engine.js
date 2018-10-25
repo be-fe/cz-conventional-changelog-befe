@@ -6,13 +6,13 @@ const autoComplete = require('@moyuyc/inquirer-autocomplete-prompt')
 const nps = require('path')
 const minimist = require('minimist')
 const omit = require('lodash.omit')
-const gitRemoteOriginUrl = require('git-remote-origin-url')
 const getCommitLintTypes = require('conventional-commit-types-befe')
 const osLocale = require('os-locale')
 const findUp = require('find-up')
 const loadJson = require('load-json-file')
 
 const { name } = require('../package')
+const getGitRemoteUrl = require('./gitRemoteUrl')
 const utils = require('./utils')
 const makeSuggest = require('./makeSuggest')
 const i = require('./i18n')
@@ -72,7 +72,6 @@ module.exports = function({
         ? 'zh'
         : 'en'
       pkg.lang = pkg.lang || lang
-      gitRemoteUrl = gitRemoteUrl || (await gitRemoteOriginUrl())
 
       i.setLanguage(utils.getLanguage(pkg.lang))
       let { typeKeys, typeObjects } = getCommitLintTypes(pkg.lang)
@@ -92,8 +91,19 @@ module.exports = function({
           config = await loadJson(rcPath)
         }
       }
-      config = Object.assign({ scopeSuggestOnly: false }, config)
-      const adaptorConfig = omit(config, ['scopes', 'scopeSuggestOnly'])
+      config = Object.assign(
+        { scopeSuggestOnly: false, remoteName: 'origin' },
+        config
+      )
+      const adaptorConfig = omit(config, [
+        'scopes',
+        'scopeSuggestOnly',
+        'remoteName'
+      ])
+
+      gitRemoteUrl =
+        gitRemoteUrl ||
+        (await getGitRemoteUrl(null, { remoteName: config.remoteName }))
 
       suggestAdaptors = suggestAdaptors.map(
         Class => new Class(adaptorConfig, pkg, gitRemoteUrl)

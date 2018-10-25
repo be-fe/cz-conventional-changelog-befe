@@ -348,7 +348,7 @@ describe('makeSuggest', function() {
             }
           ]
         })
-      ).toEqual(require('./fixture/icode'))
+      ).toEqual(require('./fixture/icafe'))
     })
   })
 

@@ -45,13 +45,11 @@ p()
       pkg: getPackageJsonConfigs(examplePath)
     })
 
-    return cz.then(({ prompter }) => {
-      return prompter(inquirer, function(msg, options) {
-        console.log('\n------------ output --------------')
-        console.log(msg)
-        console.log('----------------------------------')
-        console.log(options)
-      })
+    return cz.prompter(inquirer, function(msg, options) {
+      console.log('\n------------ OUTPUT --------------')
+      console.log(msg)
+      console.log('----------------------------------')
+      console.log(options)
     })
   })
   .catch(console.error)

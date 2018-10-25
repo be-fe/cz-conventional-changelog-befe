@@ -1,9 +1,3 @@
 {
-  "icafe": {
-    "suggestEnabled": false,
-    "data": {
-      "spaceId": "befe-erp"
-    }
-  },
   "suggestEnabled": true
 }
