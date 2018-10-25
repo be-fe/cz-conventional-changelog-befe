@@ -28,9 +28,7 @@ function lastOfLink(string) {
 function unlinkify(text, replacer = m => m) {
   const reg = /#__link__#(.*)?#__link__#/g
   let i = 0
-  return text.replace(reg, (_, m) =>
-    replacer(m, { times: ++i, endIndex: RegExp.lastMatch.length })
-  )
+  return text.replace(reg, (_, m) => replacer(m, { times: ++i, endIndex: RegExp.lastMatch.length }))
 }
 
 const INCREASE_LEN = linkify('').length
@@ -71,10 +69,8 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
       inputData = {
         ...inputData,
         ...groups,
-        namespace:
-          typeof groups.namespace === 'string' ? groups.namespace : namespace,
-        matching:
-          typeof groups.matching === 'string' ? groups.matching : matching
+        namespace: typeof groups.namespace === 'string' ? groups.namespace : namespace,
+        matching: typeof groups.matching === 'string' ? groups.matching : matching
       }
     } else if (suggestTitle) {
       isStartIssue = true
@@ -95,7 +91,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
     let list = []
     try {
       list = await controller.fn.call(adaptor, inputData)
-      debug('响应数据：%O', list)
+      debug('响应数据：%o', list)
     } catch (e) {
       debug(e)
       throw e
@@ -104,9 +100,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
     if (!list || !Array.isArray(list)) {
       return Promise.resolve([])
     }
-    const parsed = parse(
-      adaptor.options.placeholder || adaptor.config.placeholder
-    )
+    const parsed = parse(adaptor.options.placeholder || adaptor.config.placeholder)
     const colWidths = parsed.map(d => {
       let width = null
       if (d.type === 'data') {
@@ -136,9 +130,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
       parsed.forEach(d => {
         if (d.type === 'data') {
           if (flattenData.hasOwnProperty(d.value)) {
-            let str = `${d.prefix || ''}${String(
-              flattenData[d.value]
-            )}${d.suffix || ''}`
+            let str = `${d.prefix || ''}${String(flattenData[d.value])}${d.suffix || ''}`
 
             if (d.data.link && linkEnabled) {
               str = linkify(str)
@@ -157,8 +149,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
       table.push(row)
 
       const leftStr = !isSuggestTitle
-        ? input.slice(0, leftIndex) +
-          (flattenData.issueId || `#${flattenData.number}`)
+        ? input.slice(0, leftIndex) + (flattenData.issueId || `#${flattenData.number}`)
         : input.slice(0, leftIndex) + flattenData.title
 
       return {
@@ -171,11 +162,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
 
     const tableLines = table.toString().split('\n')
     // debug(tableLines)
-    debug(
-      'choices.length: %d, tableLines.length: %d.',
-      choices.length,
-      tableLines.length
-    )
+    debug('choices.length: %d, tableLines.length: %d.', choices.length, tableLines.length)
     choices = choices.map((data, index) => {
       let line = null
       let len = cliWidth() - 10 /* the length of `prefix + suffix` */
