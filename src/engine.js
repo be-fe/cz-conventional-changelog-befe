@@ -6,10 +6,15 @@ const autoComplete = require('@moyuyc/inquirer-autocomplete-prompt')
 const nps = require('path')
 const minimist = require('minimist')
 const omit = require('lodash.omit')
+const getCommitLintTypes = require('conventional-commit-types-befe')
+const osLocale = require('os-locale')
+const findUp = require('find-up')
+const loadJson = require('load-json-file')
 
-const name = require('../package').name
-
+const { name } = require('../package')
+const getGitRemoteUrl = require('./gitRemoteUrl')
 const utils = require('./utils')
+const makeSuggest = require('./makeSuggest')
 const i = require('./i18n')
 const i18n = i.i18n
 
@@ -39,79 +44,116 @@ function removeArgv(flags = []) {
 }
 removeArgv(['--read', '--retry'])
 
+function catchError(fn) {
+  return async function() {
+    try {
+      return await fn.apply(this, arguments)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+}
+
 // This can be any kind of SystemJS compatible module.
 // We use Commonjs here, but ES6 or AMD would do just
 // fine.
-module.exports = function(options) {
-  const { config } = options.pkg || {}
-  const typeChoices = utils.rightPadTypes(
-    options.typeObjects,
-    options.typeKeys,
-    options.language
-  )
-  const gitRootPath = utils.getGitRootPath()
-  const rcConfig = config ? config[name] : {}
-  const mergedConfig = Object.assign(
-    { scopeSuggestOnly: false },
-    options.icafe,
-    rcConfig
-  )
-  const prefix = config ? config.spaceId : null
-
-  const icafe = omit(mergedConfig, ['scopes', 'scopeSuggestOnly'])
-
-  function makeSuggest({ always = false, suggestTitle } = {}) {
-    return function suggestIcafeIssues(anw, input, rl) {
-      return utils.suggestIcafeIssues(
-        input,
-        rl,
-        Object.assign({}, icafe || {}, { always, suggestTitle })
-      )
-    }
-  }
-
+module.exports = function({
+  pkg,
+  gitRemoteUrl,
+  suggestAdaptors = require('./suggest-adaptor'),
+  userc = true
+} = {}) {
   return {
-    // When a user runs `git cz`, prompter will
-    // be executed. We pass you cz, which currently
-    // is just an instance of inquirer.js. Using
-    // this you can ask questions and get answers.
-    //
-    // The commit callback should be executed when
-    // you're ready to send back a commit template
-    // to git.
-    //
-    // By default, we'll de-indent your commit
-    // template and will keep empty lines.
-    prompter: function(cz, commit) {
-      const isSuggestEnabled = utils.isSuggestEnabled()
-      if (!isSuggestEnabled) {
-        console.warn(i18n('warn.suggest-disabled'))
+    prompter: catchError(async function(cz, commit) {
+      let lang = (osLocale.sync() || '')
+        .toLowerCase()
+        .trim()
+        .startsWith('zh')
+        ? 'zh'
+        : 'en'
+      pkg.lang = pkg.lang || lang
+
+      i.setLanguage(utils.getLanguage(pkg.lang))
+      let { typeKeys, typeObjects } = getCommitLintTypes(pkg.lang)
+
+      // Convert `Fix` to `fix`
+      const set = new Set()
+      typeKeys.forEach(type => {
+        set.add(type.toLowerCase())
+      })
+      typeKeys = Array.from(set)
+
+      const typeChoices = utils.rightPadTypes(typeObjects, typeKeys, pkg.lang)
+      let config = pkg.config && pkg.config[name]
+      if (!config && userc) {
+        let rcPath = await findUp(`.${name}rc`)
+        if (rcPath) {
+          config = await loadJson(rcPath)
+        }
+      }
+      config = Object.assign(
+        { scopeSuggestOnly: false, remoteName: 'origin' },
+        config
+      )
+      const adaptorConfig = omit(config, [
+        'scopes',
+        'scopeSuggestOnly',
+        'remoteName'
+      ])
+
+      gitRemoteUrl =
+        gitRemoteUrl ||
+        (await getGitRemoteUrl(null, { remoteName: config.remoteName }))
+
+      suggestAdaptors = suggestAdaptors.map(
+        Class => new Class(adaptorConfig, pkg, gitRemoteUrl)
+      )
+
+      const enabledSuggest = suggestAdaptors.find(adaptor =>
+        adaptor.isEnabled()
+      )
+      const isEveryDisabled = suggestAdaptors.every(
+        adaptor => !adaptor.options.suggestEnabled
+      )
+
+      function makeSuggestLocal(options) {
+        if (!enabledSuggest) {
+          return null
+        }
+
+        const suggest = makeSuggest(enabledSuggest, options)
+        return (answers, input, rl) => suggest(input, rl)
       }
 
+      if (enabledSuggest) {
+        console.log(
+          i18n(
+            'succ.suggest-enabled',
+            [
+              enabledSuggest.name,
+              enabledSuggest.namespace ? `(${enabledSuggest.namespace})` : ''
+            ].join(' ')
+          )
+        )
+      } else if (!isEveryDisabled) {
+        console.warn(i18n('warn.suggest-disabled'))
+      }
       console.log(i18n('first.hint'))
 
-      // Let's ask some questions of the user
-      // so that we can populate our commit
-      // template.
-      //
-      // See inquirer.js docs for specifics.
-      // You can also opt to use another input
-      // collection library if you prefer.
-
-      const type = isSuggestEnabled ? 'auto-complete' : 'input'
+      const type = enabledSuggest ? 'auto-complete' : 'input'
       cz.registerPrompt('auto-complete', autoComplete)
       const store = new FileStore({
         storePath: nps.join(__dirname, '../inquirer-cache.json'),
-        key: gitRootPath
+        key: utils.getGitRootPath() || (pkg && pkg.name)
       })
 
       let scopeProps = { type: 'input' }
-      if (Array.isArray(mergedConfig.scopes) && mergedConfig.scopes.length) {
+      if (Array.isArray(config.scopes) && config.scopes.length) {
         scopeProps.type = 'auto-complete'
-        scopeProps.suggestOnly = mergedConfig.scopeSuggestOnly
+        scopeProps.suggestOnly = config.scopeSuggestOnly
         scopeProps.source = (answers, input) => {
           return fuzzy
-            .filter(input || '', mergedConfig.scopes, {
+            .filter(input || '', config.scopes, {
               extract: function(el) {
                 return typeof el === 'string'
                   ? el
@@ -125,96 +167,91 @@ module.exports = function(options) {
       }
 
       function prompt() {
-        return inquirerStore(
-          cz.prompt,
-          [
-            {
-              type: 'auto-complete',
-              // searchText: null,
-              // noResultText: null,
-              name: 'type',
-              message: i18n('feat.hint'),
-              source: (answers, input) => {
-                return fuzzy
-                  .filter(input || '', typeChoices, {
-                    extract: function(el) {
-                      return (el.value || '') + ' ' + el.name
-                    }
-                  })
-                  .map(x => {
-                    return x.original
-                  })
-              }
-            },
-            {
-              name: 'scope',
-              message: i18n('scope.hint'),
-              ...scopeProps
-            },
-            {
-              type: type,
-              noResultText: null,
-              suggestOnly: true,
-              name: 'subject',
-              source: makeSuggest({ suggestTitle: true }),
-              validate: input => {
-                if (!input) {
-                  return i18n('subject.error')
+        return Promise.resolve(
+          inquirerStore(
+            cz.prompt,
+            [
+              {
+                type: 'auto-complete',
+                name: 'type',
+                message: i18n('feat.hint'),
+                source: (answers, input) => {
+                  return fuzzy
+                    .filter(input || '', typeChoices, {
+                      extract: function(el) {
+                        return (el.value || '') + ' ' + el.name
+                      }
+                    })
+                    .map(x => {
+                      return x.original
+                    })
                 }
-                return true
               },
-              message: i18n('subject.hint')
-            },
+              {
+                name: 'scope',
+                message: i18n('scope.hint'),
+                ...scopeProps
+              },
+              {
+                type: type,
+                // noResultText: null,
+                suggestOnly: true,
+                name: 'subject',
+                source: makeSuggestLocal({ suggestTitle: true }),
+                validate: input => {
+                  if (!input) {
+                    return i18n('subject.error')
+                  }
+                  return true
+                },
+                message: i18n('subject.hint')
+              },
+              {
+                type: 'input',
+                name: 'body',
+                message: i18n('body.hint')
+              },
+              {
+                type: 'confirm',
+                default: false,
+                name: 'hasBreaking',
+                message: i18n('has-breaking.hint')
+              },
+              {
+                type: 'input',
+                when: ans => ans.hasBreaking,
+                name: 'breaking',
+                message: i18n('breaking.change.hint')
+                // noResultText: null,
+                // suggestOnly: true,
+                // source: makeSuggest()
+              },
+              {
+                type: 'confirm',
+                default: false,
+                name: 'hasIssues',
+                message: i18n('has-issues.hint')
+              },
+              {
+                when: ans => ans.hasIssues,
+                type: type,
+                suggestOnly: true,
+                // noResultText: null,
+                name: 'issues',
+                source: makeSuggestLocal({ always: true }),
+                message: i18n('issues.hint')
+              }
+            ],
             {
-              // bug: 在 cli 包含重复行，如果 type 为 auto-complete
-              // type: 'auto-complete',
-              // noResultText: null,
-              // suggestOnly: true,
-              // source: makeSuggest(),
-              type: 'input',
-              name: 'body',
-              message: i18n('body.hint')
-            },
-            {
-              type: 'confirm',
-              default: false,
-              name: 'hasBreaking',
-              message: i18n('has-breaking.hint')
-            },
-            {
-              type: 'input',
-              when: ans => ans.hasBreaking,
-              name: 'breaking',
-              message: i18n('breaking.change.hint')
-              // noResultText: null,
-              // suggestOnly: true,
-              // source: makeSuggest()
-            },
-            {
-              type: 'confirm',
-              default: false,
-              name: 'hasIssues',
-              message: i18n('has-issues.hint')
-            },
-            {
-              when: ans => ans.hasIssues,
-              type: type,
-              suggestOnly: true,
-              noResultText: null,
-              name: 'issues',
-              source: makeSuggest({ always: true }),
-              message: i18n('issues.hint')
+              mode: args['read'] ? 'duplex' : 'write',
+              store
             }
-          ],
-          {
-            mode: args['read'] ? 'duplex' : 'write',
-            store
-          }
+          )
         )
       }
 
       prompt()
-        .then(function(answers) {
+        .then(function(answers = {}) {
           const maxLineWidth = 100
 
           const wrapOptions = {
@@ -246,27 +283,29 @@ module.exports = function(options) {
             ? 'BREAKING CHANGE: ' + breaking.replace(/^BREAKING CHANGE: /, '')
             : ''
           breaking = wrap(breaking, wrapOptions)
+          let issues = answers.issues || ''
+          issues = issues ? wrap(issues, wrapOptions) : ''
+          const footer = filter([breaking, issues]).join('\n\n')
+          let message = head
+          if (body) {
+            message += '\n\n' + body
+          }
+          if (footer) {
+            message += '\n\n' + footer
+          }
 
-          return utils
-            .issuesFormat(prefix, answers.issues || '')
-            .then(issues => {
-              issues = issues ? wrap(issues, wrapOptions) : ''
-              const footer = filter([breaking, issues]).join('\n\n')
-              let message = head
-              if (body) {
-                message += '\n\n' + body
-              }
-              if (footer) {
-                message += '\n\n' + footer
-              }
+          const transform =
+            (enabledSuggest && enabledSuggest.transformCommitMessage) ||
+            (m => m)
 
-              typeof commit === 'function' &&
-                commit(message, {
-                  args: process.argv.slice(2)
-                })
-            })
+          return Promise.resolve(transform(message)).then(message => {
+            typeof commit === 'function' &&
+              commit(message, {
+                args: process.argv.slice(2)
+              })
+          })
         })
         .catch(console.error)
-    }
+    })
   }
 }

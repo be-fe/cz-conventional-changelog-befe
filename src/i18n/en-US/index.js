@@ -2,8 +2,8 @@ const chalk = require('chalk').default
 
 module.exports = {
   'first.hint':
-    '\nLine 1 will be cropped at 100 characters. All other ' +
-    'lines will be wrapped after 100 characters.\n',
+    'Line 1 will be cropped at 100 characters. All other ' +
+    'lines will be wrapped after 100 characters.',
   'feat.hint': "Select the type of change that you're committing:",
   'has-breaking.hint': 'Are there any breaking changes?',
   'has-issues.hint': 'Does this change affect any open issues?',
@@ -20,7 +20,8 @@ module.exports = {
     "3. multiple issues seperate by space or ',' (e.g. re asset-123,#2345,#123123,hard-3)\n",
   'subject.error': "Please write some short description here, it's required",
   'warn.suggest-disabled':
-    chalk.redBright('Warning：icafe suggest is disabled，please see ') +
+    chalk.redBright('Warning：issues suggest is disabled，please see ') +
     chalk.cyan('https://bit.ly/2JdTSQT') +
-    chalk.redBright(' for more information.')
+    chalk.redBright(' for more information.'),
+  'succ.suggest-enabled': chalk.green('${1} issue suggest is enabled!')
 }

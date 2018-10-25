@@ -1,0 +1,14 @@
+{
+  "suggestEnabled": false,
+  "scopes": [
+    "yes",
+    "noop",
+    "foo",
+    "bar",
+    {
+      "name": "name",
+      "value": "ok"
+    }
+  ],
+  "scopeSuggestOnly": false
+}
