@@ -124,6 +124,8 @@ cz-conventional-changelog-befe 可以来自 `package.json` 或者 `.cz-conventio
 
 单行 issue 提示布局模板。
 
+![](https://i.loli.net/2018/10/25/5bd1d3530b387.png)
+
 - Type: `string`
 - Default: `'{#:number?link} {[:type:]?align=center} {(:state:)?align=center} {title?w=50%} {assignees}'`
 
