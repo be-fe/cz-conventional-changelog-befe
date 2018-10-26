@@ -75,6 +75,7 @@
     "tiny-i18n": "^1.1.2",
     "tranz": "^0.6.0",
     "tranz-commit-icafe": "^1.0.7",
+    "update-notifier": "^2.5.0",
     "word-wrap": "^1.2.3"
   },
   "devDependencies": {
