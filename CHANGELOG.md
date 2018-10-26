@@ -1,3 +1,9 @@
+# [2.1.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.0.1...v2.1.0) (2018-10-26)
+
+### 新特性
+
+- add update-notifier \([d18709f](https://github.com/be-fe/cz-conventional-changelog-befe/commit/d18709f))
+
 ## [2.0.1](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.0.0...v2.0.1) (2018-10-25)
 
 ### 性能提升
