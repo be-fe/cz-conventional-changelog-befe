@@ -1,3 +1,9 @@
+## [2.1.1](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.1.0...v2.1.1) (2018-10-26)
+
+### 修复
+
+- namespace is not define \([285350c](https://github.com/be-fe/cz-conventional-changelog-befe/commit/285350c))
+
 # [2.1.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.0.1...v2.1.0) (2018-10-26)
 
 ### 新特性
