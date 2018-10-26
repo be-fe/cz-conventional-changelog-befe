@@ -261,7 +261,7 @@ module.exports = function({ pkg, gitRemoteUrl, suggestAdaptors = require('./sugg
             message += '\n\n' + footer
           }
 
-          const transform = (enabledSuggest && enabledSuggest.transformCommitMessage) || (m => m)
+          const transform = (enabledSuggest && enabledSuggest.transformCommitMessage.bind(enabledSuggest)) || (m => m)
 
           return Promise.resolve(transform(message)).then(message => {
             typeof commit === 'function' &&
