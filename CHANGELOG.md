@@ -1,3 +1,9 @@
+# [2.2.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.1.1...v2.2.0) (2018-10-31)
+
+### 性能提升
+
+- **suggest:** 对于 suggest title，去掉前缀的 action \([2fbea6a](https://github.com/be-fe/cz-conventional-changelog-befe/commit/2fbea6a)), 关闭 [#5](https://github.com/be-fe/cz-conventional-changelog-befe/issues/5)
+
 ## [2.1.1](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.1.0...v2.1.1) (2018-10-26)
 
 ### 修复

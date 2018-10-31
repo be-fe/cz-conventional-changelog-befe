@@ -1,6 +1,6 @@
 {
   "name": "cz-conventional-changelog-befe",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "cz adaptor for baidu BEFE",
   "main": "lib/index.js",
   "files": [
