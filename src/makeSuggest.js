@@ -150,7 +150,7 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
 
       const leftStr = !isSuggestTitle
         ? input.slice(0, leftIndex) + (flattenData.issueId || `#${flattenData.number}`)
-        : input.slice(0, leftIndex) + flattenData.title
+        : input.slice(0, leftIndex) + (flattenData.title || '').replace(/^[a-zA-Z]+?: /, '')
 
       return {
         row,

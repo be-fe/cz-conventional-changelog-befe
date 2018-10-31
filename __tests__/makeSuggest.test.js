@@ -669,9 +669,9 @@ describe('makeSuggest', function() {
 
       expect(list).toEqual([
         {
-          cursor: 31,
+          cursor: 25,
           name: '#1 [issue] (opened) test: 测试 Gitlab issue reference',
-          value: 'test: 测试 Gitlab issue reference asd www'
+          value: '测试 Gitlab issue reference asd www'
         }
       ])
     })
