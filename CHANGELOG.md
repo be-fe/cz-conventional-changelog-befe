@@ -1,4 +1,8 @@
-# [2.3.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.2.0...v2.3.0) (2018-11-02)
+## [2.3.1](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.2.0...v2.3.1) (2018-11-02)
+
+### 回滚
+
+- 2.4.0 \([3919166](https://github.com/be-fe/cz-conventional-changelog-befe/commit/3919166))
 
 ### 性能提升
 
