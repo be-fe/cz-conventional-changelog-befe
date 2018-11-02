@@ -5,4 +5,4 @@
  *
  */
 
-module.exports = 'https://github.com/imcuttle/edam.git'
+module.exports = 'https://github.com/facebook/react.git'

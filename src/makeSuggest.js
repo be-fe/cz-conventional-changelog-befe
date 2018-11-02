@@ -11,8 +11,12 @@ const sliceInput = require('@moyuyc/inquirer-autocomplete-prompt/slice-input')
 const terminalLink = require('terminal-link')
 const namedRegexp = require('named-js-regexp')
 const stringWidth = require('string-width')
+const ConfigStore = require('configstore')
+const isEqual = require('lodash.isequalwith')
 
 const memoize = require('./memoize')
+const storeFirstCallAsync = require('./storeFirstCallAsync')
+const pkg = require('../package')
 const debug = require('./debug')
 const { parse } = require('./parsePlaceholder')
 const { newTable, sliceString, trimRight } = require('./utils')
@@ -33,16 +37,44 @@ function unlinkify(text, replacer = m => m) {
 
 const INCREASE_LEN = linkify('').length
 
+function namify(name = '') {
+  return name.replace(/\./g, '\\.')
+}
+
+const defaultConf = new ConfigStore(pkg.name)
+function makeStoreAdaptorFetch(adaptor, conf = defaultConf, { updateIntervalMs = 1000 * 60 * 60 * 24 * 3 } = {}) {
+  const lowerName = String(adaptor.name).toLowerCase()
+  const storeNameSpace = `${namify(lowerName)}.${namify(adaptor.namespace)}`
+
+  return storeFirstCallAsync(adaptor.fetch.bind(adaptor), {
+    get() {
+      const confData = conf.get(storeNameSpace)
+      if (confData && isEqual(confData.req, adaptor.data)) {
+        if (Date.now() - confData.timestamp < updateIntervalMs) {
+          return confData.res
+        }
+        // Out of Date, Delete it!
+        conf.delete(storeNameSpace)
+      }
+    },
+    set(list) {
+      conf.set(storeNameSpace, {
+        req: adaptor.data,
+        res: list,
+        timestamp: Date.now()
+      })
+    }
+  })
+}
+
 /**
  *
  * @param adaptor {AdaptorInterface}
  * @param opts
  * @return {Function}
  */
-function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
-  let controller = memoize(adaptor.fetch.bind(adaptor))
-
-  return async function suggest(input, { cursor } = {}) {
+function makeSuggest(adaptor, { always, suggestTitle = false, conf } = {}) {
+  async function suggest(input, { cursor } = {}) {
     input = input || ''
     let { leftIndex, rightIndex, matching } = sliceInput(input, {
       cursor,
@@ -224,6 +256,21 @@ function makeSuggest(adaptor, { always, suggestTitle = false } = {}) {
         return x.original
       })
   }
+
+  const updateIntervalMs = adaptor.options.updateIntervalMs
+
+  const bindFetch = adaptor.fetch.bind(adaptor)
+  let controller = memoize(bindFetch)
+  controller.fn = makeStoreAdaptorFetch({ ...adaptor, name: adaptor.name, fetch: controller.fn }, conf, {
+    updateIntervalMs
+  })
+
+  return suggest
 }
 
 module.exports = makeSuggest
+if (process.env.NODE_ENV === 'test') {
+  module.exports.makeStoreAdaptorFetch = makeStoreAdaptorFetch
+  module.exports.namify = namify
+  module.exports.defaultConf = defaultConf
+}

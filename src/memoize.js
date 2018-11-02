@@ -22,7 +22,6 @@ module.exports = function(fn) {
     (mfn = memoize(fn, {
       eq: allowFnEq
     }))
-
   let mfn
   update()
 
