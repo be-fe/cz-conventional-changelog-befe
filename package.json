@@ -44,6 +44,7 @@
     "chalk": "^2.4.1",
     "cli-table3": "^0.5.1",
     "cli-width": "^2.2.0",
+    "configstore": "^4.0.0",
     "conventional-commit-types-befe": "^1.0.7",
     "debug": "^4.1.0",
     "find-up": "^3.0.0",

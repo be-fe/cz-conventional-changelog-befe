@@ -153,6 +153,15 @@ cz-conventional-changelog-befe 可以来自 `package.json` 或者 `.cz-conventio
   | `w`     | 该字段的最大宽度大小，超出用 '...' 结尾，如 `30%` 或者 `100`，当为百分比时，按照 cli-width 来换算                        | `number|string`           |
   | `align` | 该字段的水平对齐规则                                                                                                     | `'left'|'right'|'center'` |
 
+##### `updateIntervalMs`
+
+为了解决第一次 issue suggest 的时候时间较长的问题：#7
+使用 [configstore](https://github.com/yeoman/configstore) 持久化首次请求数据，第一次 issue 列表来自文件缓存，后续的数据则均来自网络请求。
+因此引入缓存过期时间间隙，默认为三天。
+
+- Type: `number`
+- Default: `1000 * 60 * 60 * 24 * 3` (3d)
+
 ##### `token`
 
 用于设置 [github](https://github.com/settings/tokens/new) [gitlab](https://docs.gitlab.com/ee/api/README.html#personal-access-tokens) 的 token
