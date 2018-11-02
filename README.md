@@ -13,6 +13,8 @@ cz-conventional-changelog-befe 是为 BEFE 团队定制的 [commitizen 适配器
 
 可以通过友好交互(问答式)提交符合[规范的 commit message](https://www.conventionalcommits.org/).
 
+<!-- toc -->
+
 ## 特性
 
 - 生成 BEFE 团队风格的 commit message
@@ -92,6 +94,13 @@ npm install cz-conventional-changelog-befe
 - [github 接入](./docs/github-usage.md)
 - [gitlab 接入](./docs/gitlab-usage.md)
 - [icafe 接入](./docs/icafe-usage.md)
+
+在具有卡片提示功能的**简要描述字段**中，卡片提示补全功能有两种用法:
+
+1. 补全卡片号：输入 # 开头，tab 键补全卡片号
+2. 补全卡片标题（只在简要描述字段中）：输入任意非 # 开头文本，tab 键补全卡片标题
+
+其他的卡片提示字段则只能补全卡片号
 
 ## Debugger
 
