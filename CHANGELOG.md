@@ -1,3 +1,9 @@
+# [2.3.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.2.0...v2.3.0) (2018-11-02)
+
+### 性能提升
+
+- 第一次 issue suggest 的时候时间较长 \([874c925](https://github.com/be-fe/cz-conventional-changelog-befe/commit/874c925)), 关闭 [#7](https://github.com/be-fe/cz-conventional-changelog-befe/issues/7)
+
 # [2.2.0](https://github.com/be-fe/cz-conventional-changelog-befe/compare/v2.1.1...v2.2.0) (2018-10-31)
 
 ### 性能提升
